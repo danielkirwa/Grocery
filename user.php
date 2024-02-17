@@ -1,7 +1,4 @@
 <?php
-echo "<pre>";
-print_r($_POST);
-echo "</pre>";//how to insert the dynamically populated fields.
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -35,29 +32,26 @@ if (isset($_POST['save'])) {
     echo "<script>window.location.href = window.location.href;</script>";
 }
 
-// Check if add userrow button is clicked
-if (isset($_POST['adduserrow'])) {
-    // Add a new row for a new user
-    echo "<script>addUserRow();</script>";
-}
+
 // Check if add user button is clicked//trying to add the infor entered into the dtabase
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adduser'])) {
-    echo "Add User button clicked";
-    // Check if the other arrays are set as well
-    if (isset($_POST['new_fullname'], $_POST['new_email'], $_POST['new_phonenumber'], $_POST['new_idnumber'])) {
-        $new_fullname = $_POST['new_fullname'];
-        $new_email = $_POST['new_email'];
-        $new_phonenumber = $_POST['new_phonenumber'];
-        $new_idnumber = $_POST['new_idnumber'];
+    // Validate form data
+    $new_fullname = $_POST['new_fullname'];
+    $new_email = $_POST['new_email'];
+    $new_phonenumber = $_POST['new_phonenumber'];
+    $new_idnumber = $_POST['new_idnumber'];
+    $datecreated = date("Y-m-d H:i:s");
 
-        // Insert new user details into the register table
-        $sqlInsertUser = "INSERT INTO register (fullname, email, phonenumber, idnumber) VALUES ('$new_fullname', '$new_email', '$new_phonenumber', '$new_idnumber')";
-        if ($con->query($sqlInsertUser) !== true) {
-            echo "Error adding new user: " . mysqli_error($con);
-        }
-        // Reload the page after adding the user
-        echo "<script>window.location.href = window.location.href;</script>";
+    // Insert new user details into the register table
+    $sqlInsertUser = "INSERT INTO register (fullname, email, phonenumber, datecreated, idnumber) 
+                     VALUES ('$new_fullname', '$new_email', '$new_phonenumber', '$datecreated', '$new_idnumber')";
+    if ($con->query($sqlInsertUser) === TRUE) {
+        echo "New record created successfully";
+    } else {
+        echo "Error: " . $sqlInsertUser . "<br>" . $con->error;
     }
+    // Reload the page after adding the user
+    echo "<script>window.location.href = window.location.href;</script>";
 }
 
 // Check if delete user button is clicked
@@ -84,29 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $sqlSelectUsers = "SELECT * FROM register";
 $result = mysqli_query($con, $sqlSelectUsers);
 
-if (isset($_POST['xxx'])) {
-    // Check if users are selected for deletion
-    if (isset($_POST['selectedUsers'])) {
-        $selectedUsers = $_POST['selectedUsers'];
-        // Loop through selected users and delete them from both tables
-        foreach ($selectedUsers as $userId) {
-            $sqlDeleteRegister = "DELETE FROM register WHERE idnumber='$userId'";
-            if ($con->query($sqlDeleteRegister) !== true) {
-                echo "Error deleting user: " . mysqli_error($con);
-            }
 
-            $sqlDelete = "DELETE register, user FROM register INNER JOIN user ON register.email = user.username WHERE register.email='$email'";
-            if ($con->query($sqlDeleteUser) !== true) {
-                echo "Error deleting user: " . mysqli_error($con);
-            }
-        }
-        // Reload the page after deleting users
-        echo "<script>window.location.href = window.location.href;</script>";
-    } else {
-        // If no users are selected, show an alert
-        echo "<script>alert('Please select at least one user to delete.');</script>";
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -158,21 +130,54 @@ if (isset($_POST['xxx'])) {
     button:hover {
         background-color: #45a049;
     }
+    .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            animation-name: modalopen;
+            animation-duration: 0.4s;
+        }
+
+        @keyframes modalopen {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+
+        /* Close button style */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
       
       <link rel="stylesheet" href="css/general.css">
    
     <script>
-        function addUserRow() {
-            // Create a new row for adding a user
-            var table = document.querySelector('table');
-            var newRow = table.insertRow(table.rows.length - 1);
-            newRow.innerHTML = "<td><input type='checkbox' name='selectedUsers[]'></td>" +
-                "<td><input type='text' name='fullname[]'></td>" +
-                "<td><input type='email' name='email[]'></td>" +
-                "<td><input type='text' name='phonenumber[]'></td>" +
-                "<td><input type='text' name='idnumber[]'></td>";
-        }
+       
 
         function confirmDeleteUser() {
             // JavaScript confirmation for deleting a user
@@ -232,7 +237,6 @@ if (isset($_POST['xxx'])) {
         <tr>
             <td colspan="5">
                 <button type="button"name="adduserrow" onclick="addUserRow()">Add Userrow</button>
-                <button type="submit" name="adduser">Add User</button>
                 <!-- added an add user button but now working still -->
                 <button type="submit" name="delete">Delete User</button>
                 <button type="submit" name="save">Save Changes</button>
@@ -245,10 +249,44 @@ if (isset($_POST['xxx'])) {
 <form id="deleteForm" method="POST" style="display: none;">
     <input type="hidden" name="deleteUser">
 </form>
+<!-- popup  register -->
+<!-- Modal for adding a new userrow -->
+<div id="addUserModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Add User</h2>
+        <form method="post">
+            <label for="new_fullname">Enter Name:</label>
+            <input type="text" id="new_fullname" name="new_fullname" required><br><br>
+            
+            <label for="new_email">Enter Email:</label>
+            <input type="email" id="new_email" name="new_email" required><br><br>
+            
+            <label for="new_idnumber">Enter ID:</label>
+            <input type="text" id="new_idnumber" name="new_idnumber" required><br><br>
+            
+            <label for="new_phonenumber">Enter Phone:</label>
+            <input type="text" id="new_phonenumber" name="new_phonenumber" required><br><br>
+            
+            <input type="submit" value="Submit" name="adduser">
+        </form>
+    </div>
+</div>
 
 </body>
+<script>
+    function addUserRow() {
+        // Show the modal when "Add Userrow" button is clicked
+        document.getElementById('addUserModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        // Close the modal when close button is clicked
+        document.getElementById('addUserModal').style.display = 'none';
+    }
+</script>
 </html>
 
 <?php
-mysqli_close($con);
+//mysqli_close($con);
 ?>
