@@ -42,29 +42,80 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adduser'])) {
     $new_idnumber = $_POST['new_idnumber'];
     $datecreated = date("Y-m-d H:i:s");
 
+    // Generate MD5 hashed password
+    $default_password = md5($new_idnumber);
+
+    // Start a transaction
+    $con->begin_transaction();
+
     // Insert new user details into the register table
-    $sqlInsertUser = "INSERT INTO register (fullname, email, phonenumber, datecreated, idnumber) 
+    $sqlInsertRegister = "INSERT INTO register (fullname, email, phonenumber, datecreated, idnumber) 
                      VALUES ('$new_fullname', '$new_email', '$new_phonenumber', '$datecreated', '$new_idnumber')";
-    if ($con->query($sqlInsertUser) === TRUE) {
+
+    // Insert into user table with default password
+    $sqlInsertUser = "INSERT INTO user (username, userpassword, priviledge) 
+                     VALUES ('$new_email', '$default_password', 'user')";
+
+    // Execute both queries
+    if ($con->query($sqlInsertRegister) === TRUE && $con->query($sqlInsertUser) === TRUE) {
+        // Commit the transaction if both queries are successful
+        $con->commit();
         echo "New record created successfully";
     } else {
-        echo "Error: " . $sqlInsertUser . "<br>" . $con->error;
+        // Rollback the transaction if any query fails
+        $con->rollback();
+        echo "Error: " . $con->error;
     }
+
     // Reload the page after adding the user
     echo "<script>window.location.href = window.location.href;</script>";
 }
 
-// Check if delete user button is clicked
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the delete button is clicked
     if (isset($_POST['delete'])) {
         // Check if any user is selected for deletion
         if (isset($_POST['selectedUsers'])) {
-            // Loop through each selected user and delete them
+            // Start a transaction
+            $con->begin_transaction();
+
+            // Loop through each selected user and delete them from both tables
             foreach ($_POST['selectedUsers'] as $userId) {
-                $sqlDeleteUser = "DELETE FROM register WHERE idnumber='$userId'";
-                mysqli_query($con, $sqlDeleteUser);
+                // Delete from register table
+                $sqlDeleteRegister = "DELETE FROM register WHERE idnumber='$userId'";
+                $resultRegister = $con->query($sqlDeleteRegister);
+
+                // Delete from user table
+             //   $sqlDeleteUser = "DELETE FROM user WHERE username=' $email'";
+               // $resultUser = $con->query($sqlDeleteUser);
+               // Get the email associated with the current user ID
+    $sqlGetEmail = "SELECT email FROM register WHERE idnumber='$userId'";
+    $resultEmail = $con->query($sqlGetEmail);
+    if ($resultEmail->num_rows > 0) {
+        $row = $resultEmail->fetch_assoc();
+        $email = $row['email'];
+    } else {
+        echo "Error: User not found";
+        exit;
+    }
+
+    // Delete from user table using the retrieved email
+    $sqlDeleteUser = "DELETE FROM user WHERE username='$email'";
+    $resultUser = $con->query($sqlDeleteUser);
+
+                // Check if both deletions were successful
+                if ($resultRegister === FALSE || $resultUser === FALSE) {
+                    // Rollback the transaction if any deletion fails
+                    $con->rollback();
+                    echo "Error deleting user with ID: $userId";
+                    exit;
+                }
             }
+
+            // Commit the transaction if all deletions are successful
+            $con->commit();
+            
             // Redirect to the same page after deletion
             header("Location: ".$_SERVER['PHP_SELF']);
             exit;
