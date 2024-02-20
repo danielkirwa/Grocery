@@ -109,6 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (empty($errorMessages)) {
                 $con->commit();
                 $successMessages[] = "All deletions committed successfully.";
+                echo '<script>alert("All deletions committed successfully.")</script>'; 
             } else {
                 $con->rollback();
                 $errorMessages[] = "Rollback performed due to errors.";
@@ -116,14 +117,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Output success and error messages
             foreach ($successMessages as $message) {
-                echo $message . "<br>";
+                //echo $message . "<br>";
             }
             foreach ($errorMessages as $message) {
-                echo $message . "<br>";
+                echo '<script>alert("All deletions committed successfully.")setTimeout(function(){ location.reload(); }, 5000);</script>'; 
             }
 
             // Redirect to the same page after deletion
-            // header("Location: ".$_SERVER['PHP_SELF']);
+            //header("Location: ".$_SERVER['PHP_SELF']);
             exit;
         } else {
             echo "Please select at least one user to delete.";

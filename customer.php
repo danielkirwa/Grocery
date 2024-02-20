@@ -42,7 +42,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <?php
     // Display all data from the enquiries table
-    $sqlSelectEnquiries = "SELECT NAME, EMAIL, MESSAGE, DATECREATED, STATUS, COUNT FROM enquiries";
+    $sqlSelectEnquiries = "SELECT NAME, EMAIL, MESSAGE, DATECREATED, STATUS, COUNT FROM enquiries WHERE STATUS = 1";
+
     $result = mysqli_query($con, $sqlSelectEnquiries);
 
     $count = 1; // Initialize count variable
