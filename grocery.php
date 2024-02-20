@@ -1,4 +1,3 @@
-
 <?php
 require_once('connection.php');
 ?>
@@ -87,6 +86,117 @@ if(isset($_POST['submit'])) {
         .product button:hover {
             background-color: #45a049;
         }
+
+/text style/
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+}
+
+/* Close button styles */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Checkout button styles */
+#checkout-btn {
+    border: 2px solid black;
+    font-size: 16px;
+    border-radius: 20px;
+    margin: 20px;
+    padding: 10px 20px;
+    background: orange;
+    width: 150px;
+    height: 50px;
+    color: black;
+    cursor: pointer;
+}
+
+#checkout-btn:hover {
+    background: #ffa500;
+}
+
+#cart-summary p {
+    font-weight: bold;
+}
+#payment-icons img {
+    width: 120px; /* Adjust the width as needed */
+    margin-right: 10px; /* Adjust the spacing between icons */
+}
+/* CSS styles */
+#payment-icons input[type="radio"] {
+    display: none; /* Hide the radio buttons */
+}
+
+#payment-icons label.payment-method {
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+#payment-icons label.payment-method img {
+    width: 120px; /* Adjust the width as needed */
+    margin-right: 10px; /* Adjust the spacing between icons */
+    border: 2px solid transparent; /* Add border to icons */
+}
+
+#payment-icons label.payment-method:hover img {
+    border-color: orange; /* Change border color on hover */
+}
+
+#payment-icons input[type="radio"]:checked + label.payment-method img {
+    border-color: orange; /* Change border color for checked icon */
+}
+/* Checkout button style */
+.checkout-button {
+    border: none;
+    font-size: 16px;
+    border-radius: 20px;
+    margin: 20px;
+    padding: 10px 20px;
+    width: 150px;
+    height: 50px;
+    color: white;
+    background-color: orange;
+    cursor: pointer;
+    outline: none; /* Remove focus outline */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+.checkout-button:hover {
+    background-color: #ff8c00; /* Darker orange on hover */
+}
+
+
+
+
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -203,12 +313,30 @@ if(isset($_POST['submit'])) {
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Shopping Cart</h2>
-        <div id="cart-items" style="margin:20px; ">
+        <div id="cart-items" style="margin: 20px;">
             <!-- Cart items will be displayed here -->
         </div>
-        <button id="checkout-btn" style="border: 4px solid black; font-size: 16px;border-radius: 20px; margin:20px; padding: 10px 20px; background: orange; width: 150px; height: 50px; color: black;">Checkout</button>
+        <div id="cart-summary" style="margin: 20px;">
+            <p>Subtotal: <span id="subtotal">$0.00</span></p>
+            <p>Discount: <span id="discount">$0.00</span></p>
+            <p>Total: <span id="total">$0.00</span></p>
+            <p>Date/Time: <span id="timestamp"></span></p>
+            <p>Payment Methods:</p>
+            <div id="payment-icons">
+            <input type="radio" id="mpesa" name="payment-method" value="mpesa">
+                <label for="mpesa" class="payment-method"><img src="https://www.safaricom.co.ke/images/MicrosoftTeams-image.jpg" alt="M-Pesa" title="M-Pesa"></label>
+                <input type="radio" id="paypal" name="payment-method" value="paypal">
+                <label for="paypal" class="payment-method"><img src="https://i.pcmag.com/imagery/reviews/068BjcjwBw0snwHIq0KNo5m-15.fit_lim.size_1050x591.v1602794215.png" alt="PayPal" title="PayPal"></label>
+                <input type="radio" id="visa" name="payment-method" value="visa">
+                <label for="visa" class="payment-method"><img src="https://www.paymentscardsandmobile.com/wp-content/uploads/2021/11/visa-mastercard-logos.jpg" alt="Visa" title="Visa"></label>
+                
+            </div>
+        </div>
+        <button id="checkout-btn" class="checkout-button"  style="width: 200px;font-weight: bold;">Checkout</button>
+
     </div>
 </div>
+
 
     </section>
 <!--        
@@ -460,7 +588,38 @@ if(isset($_POST['submit'])) {
 
             displayCartItems(); // Initial display
         });
-        
+
+        // Get the current date and time
+const currentTimestamp = new Date().toLocaleString();
+
+// Update the timestamp in the HTML element
+document.getElementById('timestamp').textContent = currentTimestamp;
+
+        // Add event listener to radio buttons
+document.querySelectorAll('input[name="payment-method"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        updateCheckoutButton(this.value);
+    });
+});
+
+// Function to update checkout button text based on selected payment method
+function updateCheckoutButton(paymentMethod) {
+    let checkoutButton = document.getElementById('checkout-btn');
+    switch (paymentMethod) {
+        case 'mpesa':
+            checkoutButton.textContent = 'Check with Mpesa';
+            break;
+        case 'paypal':
+            checkoutButton.textContent = 'Check with PayPal';
+            break;
+        case 'visa':
+            checkoutButton.textContent = 'Check with Visa';
+            break;
+        default:
+            checkoutButton.textContent = 'Checkout';
+    }
+}
+
     </script>
     
 </body>
