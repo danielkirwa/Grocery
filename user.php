@@ -42,37 +42,95 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adduser'])) {
     $new_idnumber = $_POST['new_idnumber'];
     $datecreated = date("Y-m-d H:i:s");
 
+    // Generate MD5 hashed password
+    $default_password = md5($new_idnumber);
+
+    // Start a transaction
+    $con->begin_transaction();
+
     // Insert new user details into the register table
-    $sqlInsertUser = "INSERT INTO register (fullname, email, phonenumber, datecreated, idnumber) 
+    $sqlInsertRegister = "INSERT INTO register (fullname, email, phonenumber, datecreated, idnumber) 
                      VALUES ('$new_fullname', '$new_email', '$new_phonenumber', '$datecreated', '$new_idnumber')";
-    if ($con->query($sqlInsertUser) === TRUE) {
+
+    // Insert into user table with default password
+    $sqlInsertUser = "INSERT INTO user (username, userpassword, priviledge) 
+                     VALUES ('$new_email', '$default_password', 'user')";
+
+    // Execute both queries
+    if ($con->query($sqlInsertRegister) === TRUE && $con->query($sqlInsertUser) === TRUE) {
+        // Commit the transaction if both queries are successful
+        $con->commit();
         echo "New record created successfully";
     } else {
-        echo "Error: " . $sqlInsertUser . "<br>" . $con->error;
+        // Rollback the transaction if any query fails
+        $con->rollback();
+        echo "Error: " . $con->error;
     }
+
     // Reload the page after adding the user
     echo "<script>window.location.href = window.location.href;</script>";
 }
 
-// Check if delete user button is clicked
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the delete button is clicked
     if (isset($_POST['delete'])) {
         // Check if any user is selected for deletion
         if (isset($_POST['selectedUsers'])) {
-            // Loop through each selected user and delete them
-            foreach ($_POST['selectedUsers'] as $userId) {
-                $sqlDeleteUser = "DELETE FROM register WHERE idnumber='$userId'";
-                mysqli_query($con, $sqlDeleteUser);
+            // Start a transaction
+            $con->begin_transaction();
+
+            $successMessages = array();
+            $errorMessages = array();
+
+            // Loop through each selected user and delete them from both tables
+            foreach ($_POST['selectedUsers'] as $email) {
+                // Delete from user table
+                $sql_user = "DELETE FROM user WHERE username = ?";
+                $stmt_user = $con->prepare($sql_user);
+                $stmt_user->bind_param("s", $email);
+                if ($stmt_user->execute()) {
+                    $successMessages[] = "User '$email' deleted successfully from the 'user' table.";
+                } else {
+                    $errorMessages[] = "Error deleting user '$email' from the 'user' table: " . $stmt_user->error;
+                }
+
+                // Delete from register table
+                $sql_register = "DELETE FROM register WHERE email = ?";
+                $stmt_register = $con->prepare($sql_register);
+                $stmt_register->bind_param("s", $email);
+                if ($stmt_register->execute()) {
+                    $successMessages[] = "User '$email' deleted successfully from the 'register' table.";
+                } else {
+                    $errorMessages[] = "Error deleting user '$email' from the 'register' table: " . $stmt_register->error;
+                }
             }
+
+            // Commit the transaction if all deletions are successful
+            if (empty($errorMessages)) {
+                $con->commit();
+                $successMessages[] = "All deletions committed successfully.";
+            } else {
+                $con->rollback();
+                $errorMessages[] = "Rollback performed due to errors.";
+            }
+
+            // Output success and error messages
+            foreach ($successMessages as $message) {
+                echo $message . "<br>";
+            }
+            foreach ($errorMessages as $message) {
+                echo $message . "<br>";
+            }
+
             // Redirect to the same page after deletion
-            header("Location: ".$_SERVER['PHP_SELF']);
+            // header("Location: ".$_SERVER['PHP_SELF']);
             exit;
         } else {
             echo "Please select at least one user to delete.";
         }
     }
 }
+
 
 // Fetch user records from the database
 $sqlSelectUsers = "SELECT * FROM register";
@@ -219,7 +277,7 @@ $result = mysqli_query($con, $sqlSelectUsers);
         <?php
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>";
-            echo "<td><input type='checkbox' name='selectedUsers[]' value='{$row['idnumber']}'></td>";
+            echo "<td><input type='checkbox' name='selectedUsers[]' value='{$row['email']}'></td>";
             echo "<td><input type='text' name='fullname[]' value='{$row['fullname']}'></td>";
             echo "<td><input type='email' name='email[]' value='{$row['email']}'></td>";
             echo "<td><input type='text' name='phonenumber[]' value='{$row['phonenumber']}'></td>";

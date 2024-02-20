@@ -448,8 +448,8 @@ if(isset($_POST['submit'])) {
                             <p>${item.productName}</p>
                             <p>Quantity: ${item.quantity}</p>
                             <p>Total Price: ${item.totalPrice.toFixed(2)}</p>
-                            <button class="minus">-</button>
-                            <button class="plus">+</button>
+                            <button class="minus" name="remove">-</button>
+                            <button class="plus" name="addition">+</button>
                         
                         </div>
                     `;
@@ -460,6 +460,7 @@ if(isset($_POST['submit'])) {
 
             displayCartItems(); // Initial display
         });
+        
     </script>
     
 </body>
