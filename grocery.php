@@ -193,6 +193,29 @@ if(isset($_POST['submit'])) {
 .checkout-button:hover {
     background-color: #ff8c00; /* Darker orange on hover */
 }
+.cart-item button.remove,
+.cart-item button.addition {
+    background-color: orange;
+   border:solid black;
+   font-weight:bolder;
+    color: red;
+    border-radius:20px;
+    padding:5px 10px;
+    font-size: 32px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cart-item button.remove:hover,
+.cart-item button.addition:hover {
+    background-color: #ddd;
+}
+
+.cart-item button.remove:active,
+.cart-item button.addition:active {
+    background-color: #bbb;
+}
+
 
 
 
@@ -296,8 +319,9 @@ if(isset($_POST['submit'])) {
                 echo '      <label class="label">0</label>';
                 echo '      <button class="plus">+</button>';
                 echo '  </div>';
-                echo '  <button class="add" data-product-code="' . $row["productcode"] . '" data-product-name="' . $row["productname"] . '" data-product-price="' . $row["productprice"] . '"><i class="fas fa-shopping-cart"></i> Add</button>';
+                echo '  <button class="add" data-product-code="' . $row["productcode"] . '" data-product-name="' . $row["productname"] . '" data-product-price="' . $row["productprice"] . '"><i class="fas fa-shopping-cart"></i> Add</button>';        
                 echo '</div>';
+                
                 echo "</div>"; // Close product container
             }
         } else {
@@ -471,6 +495,9 @@ if(isset($_POST['submit'])) {
             const cartModal = document.getElementById('cart-modal');
             const cartItems = document.getElementById('cart-items');
             const totalAmountDisplay = document.getElementById('total-amount');
+            const removeButtons = document.querySelectorAll('.remove');
+           const additionButtons = document.querySelectorAll('.addition');
+//added the above two constant
             const checkoutBtn = document.getElementById('checkout-btn');
 
             const plusButtons = document.querySelectorAll('.plus');
@@ -555,6 +582,76 @@ if(isset($_POST['submit'])) {
                     displayCartItems();
                 });
             });
+            //added the below script code for addition and remove
+            // Add event listeners for remove buttons
+removeButtons.forEach(button => {
+    button.addEventListener('click', function () {
+        const index = parseInt(this.dataset.index);
+        const productName = this.dataset.productName;
+        const productPrice = parseFloat(this.dataset.productPrice);
+        const quantity = cartItemList[index].quantity;
+
+        if (quantity > 0) {
+            // Update UI
+            labels[index].textContent = quantity - 1;
+
+            // Update total quantity of items in cart span
+            totalItemsInCart -= 1;
+            itemsInCart.textContent = totalItemsInCart;
+
+            // Update TotalAmount
+            TotalAmount -= productPrice;
+
+            // Update cartItemList
+            cartItemList[index].quantity -= 1;
+            cartItemList[index].totalPrice -= productPrice;
+
+            // If quantity becomes zero, remove the item from the cartItemList
+            if (cartItemList[index].quantity === 0) {
+                cartItemList.splice(index, 1);
+            }
+
+            // Update localStorage
+            localStorage.setItem("cartItems", JSON.stringify(cartItemList));
+            localStorage.setItem("totalamount", TotalAmount);
+
+            // Update cart items display
+            displayCartItems();
+        }
+    });
+});
+
+// Add event listeners for addition buttons
+additionButtons.forEach(button => {
+    button.addEventListener('click', function () {
+        const index = parseInt(this.dataset.index);
+        const productName = this.dataset.productName;
+        const productPrice = parseFloat(this.dataset.productPrice);
+        const quantity = cartItemList[index].quantity;
+
+        // Update UI
+        labels[index].textContent = quantity + 1;
+
+        // Update total quantity of items in cart span
+        totalItemsInCart += 1;
+        itemsInCart.textContent = totalItemsInCart;
+
+        // Update TotalAmount
+        TotalAmount += productPrice;
+
+        // Update cartItemList
+        cartItemList[index].quantity += 1;
+        cartItemList[index].totalPrice += productPrice;
+
+        // Update localStorage
+        localStorage.setItem("cartItems", JSON.stringify(cartItemList));
+        localStorage.setItem("totalamount", TotalAmount);
+
+        // Update cart items display
+        displayCartItems();
+    });
+});
+//end of the script code i added
 
             document.getElementById('cart-btn').addEventListener('click', function () {
                 cartModal.style.display = 'block';
@@ -567,18 +664,20 @@ if(isset($_POST['submit'])) {
             checkoutBtn.addEventListener('click', function () {
                 // Implement checkout functionality here
             });
+            
 
             function displayCartItems() {
                 cartItems.innerHTML = '';
+                //  added attributes to these buttons addition and remove
                 cartItemList.forEach(item => {
                     const itemHTML = `
                         <div class="cart-item">
                             <p>${item.productName}</p>
                             <p>Quantity: ${item.quantity}</p>
                             <p>Total Price: ${item.totalPrice.toFixed(2)}</p>
-                            <button class="minus" name="remove">-</button>
-                            <button class="plus" name="addition">+</button>
-                        
+                          
+                            <button class="remove" name="remove" data-product-name="${item.productName}" data-product-price="${item.totalPrice}">-</button>
+                            <button class="addition" name="addition" data-product-name="${item.productName}" data-product-price="${item.totalPrice}">+</button>
                         </div>
                     `;
                     cartItems.insertAdjacentHTML('beforeend', itemHTML);
@@ -602,23 +701,25 @@ document.querySelectorAll('input[name="payment-method"]').forEach(function(radio
     });
 });
 
+
 // Function to update checkout button text based on selected payment method
 function updateCheckoutButton(paymentMethod) {
     let checkoutButton = document.getElementById('checkout-btn');
     switch (paymentMethod) {
         case 'mpesa':
-            checkoutButton.textContent = 'Check with Mpesa';
+            checkoutButton.textContent = 'Checkout with Mpesa';
             break;
         case 'paypal':
-            checkoutButton.textContent = 'Check with PayPal';
+            checkoutButton.textContent = 'Checkout with PayPal';
             break;
         case 'visa':
-            checkoutButton.textContent = 'Check with Visa';
+            checkoutButton.textContent = 'Checkout with Visa';
             break;
         default:
             checkoutButton.textContent = 'Checkout';
     }
 }
+
 
     </script>
     
