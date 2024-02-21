@@ -146,7 +146,29 @@ $result = mysqli_query($con, $sqlSelectUsers);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management</title>
-    
+    <style>
+    .usernav {
+        background-color: #333;
+        padding: 10px 0;
+    }
+
+    .usernav nav {
+        text-align: center;
+    }
+
+    .usernav nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .usernav nav a:hover {
+        background-color: #0056b3;
+    }
+</style>
     <style>
          table {
         width: 100%;
