@@ -71,6 +71,29 @@ if(isset($_POST['removeproduct'])) {
     <title>Add Products</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="css/admin.css">
+    <style>
+    .header {
+        background-color: #333;
+        padding: 10px 0;
+    }
+
+    .header nav {
+        text-align: center;
+    }
+
+    .header nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .header nav a:hover {
+        background-color: #555;
+    }
+</style>
 </head>
 <body>
 <header class="header">

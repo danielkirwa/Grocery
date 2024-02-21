@@ -27,6 +27,75 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="css/admin.css">
     <link rel="stylesheet" href="css/adminreply.css">
+    <style>
+    .header {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .header .logo {
+        font-size: 24px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .header .nav-links {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
+
+    .header .nav-links li {
+        margin-right: 20px;
+    }
+
+    .header .nav-links li:last-child {
+        margin-right: 0;
+    }
+
+    .header .nav-links a {
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .header .nav-links a:hover {
+        color: #ccc;
+    }
+    .print-button {
+    background-color: #4CAF50; /* Green */
+    border: solid-black;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 20px; /* Adjust the top margin as needed */
+    margin-left:40%;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.print-button:hover {
+    background-color: orange; /*orange */
+}
+
+/* Center the button horizontally */
+
+
+</style>
 </head>
 <body>
 <header class="header">
@@ -39,11 +108,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <a href="customer.php">Customer Feedback</a>
     </div>
 </header>
+<br><br>
+<br>
 
 <?php
     // Display all data from the enquiries table
     $sqlSelectEnquiries = "SELECT NAME, EMAIL, MESSAGE, DATECREATED, STATUS, COUNT FROM enquiries WHERE STATUS = 1";
-
     $result = mysqli_query($con, $sqlSelectEnquiries);
 
     $count = 1; // Initialize count variable
@@ -70,7 +140,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "No enquiries found.";
     }
 ?>
-
+<div>      <button class="print-button" onclick="window.print()">Print enquiries</button></div>
 
 <!-- Added this div for the pop-up form to reply-->
 <div id="respondForm" class="popup-form">

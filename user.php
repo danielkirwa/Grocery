@@ -109,7 +109,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (empty($errorMessages)) {
                 $con->commit();
                 $successMessages[] = "All deletions committed successfully.";
-                echo '<script>alert("All deletions committed successfully.")</script>'; 
             } else {
                 $con->rollback();
                 $errorMessages[] = "Rollback performed due to errors.";
@@ -117,19 +116,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Output success and error messages
             foreach ($successMessages as $message) {
-                //echo $message . "<br>";
+                echo $message . "<br>";
             }
             foreach ($errorMessages as $message) {
-                echo '<script>alert("All deletions committed successfully.")setTimeout(function(){ location.reload(); }, 5000);</script>'; 
+                echo $message . "<br>";
             }
 
             // Redirect to the same page after deletion
-            //header("Location: ".$_SERVER['PHP_SELF']);
+             header("Location: ".$_SERVER['PHP_SELF']);
             exit;
         } else {
             echo "Please select at least one user to delete.";
         }
     }
+      echo "<script>window.location.href = window.location.href;</script>";
 }
 
 
@@ -146,7 +146,29 @@ $result = mysqli_query($con, $sqlSelectUsers);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management</title>
-    
+    <style>
+    .usernav {
+        background-color: #333;
+        padding: 10px 0;
+    }
+
+    .usernav nav {
+        text-align: center;
+    }
+
+    .usernav nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .usernav nav a:hover {
+        background-color: #0056b3;
+    }
+</style>
     <style>
          table {
         width: 100%;

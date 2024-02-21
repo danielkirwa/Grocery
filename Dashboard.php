@@ -1,3 +1,62 @@
+<?php
+require_once('connection.php');
+?>
+<?php
+// Your PHP code for database connection and fetching data comes here
+// Fetch data from database
+$sql = "SELECT COUNT(*) AS total_users FROM register";
+$result = $con->query($sql);
+
+// Initialize total users variable
+$totalUsers = 0;
+
+// Check if query executed successfully
+if ($result) {
+    $row = $result->fetch_assoc();
+    $totalUsers = $row['total_users'];
+}
+?>
+<?php
+// Your PHP code for database connection and fetching data comes here
+// Fetch data from database
+$sql = "SELECT DATE(datecreated) AS created_date, COUNT(*) AS user_count FROM register GROUP BY DATE(datecreated)";
+$result = $con->query($sql);
+
+// Initialize arrays to store labels and data
+$labels = [];
+$data = [];
+
+// Loop through the results and populate the arrays
+while ($row = $result->fetch_assoc()) {
+    $labels[] = $row['created_date'];
+    $data[] = $row['user_count'];
+}
+
+// Convert arrays to JSON format
+$labelsJSON = json_encode($labels);
+$dataJSON = json_encode($data);
+?>
+<?php
+require_once('connection.php');
+
+$productNames = [];
+$productQuantities = [];
+
+$sql = "SELECT productname, productquantity FROM product";
+$result = mysqli_query($con, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $productNames[] = $row["productname"];
+        $productQuantities[] = $row["productquantity"];
+    }
+}
+
+mysqli_close($con);
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,6 +107,7 @@
             width: 600px;
             margin-top: 20px;
         }
+        
     </style>
 </head>
 <body>
@@ -76,13 +136,20 @@
             <p>Total products sold: 200</p>
             <canvas id="productSalesChart"></canvas>
         </div>
+        
 
-        <!-- Users Card -->
-        <div class="card" onclick="window.location.href='usersreport.php';">
-            <h2>Users Report</h2>
-            <p>Total users: 100</p>
-            <canvas id="usersChart"></canvas>
-        </div>
+  <!-- Users Card -->
+<div class="card" onclick="window.location.href='user.php';">
+    <h2>Users Report</h2>
+    <p>Total users: <?php echo $totalUsers; ?></p>
+    <canvas id="usersChart"></canvas>
+</div>
+        <!-- Products Card -->
+        <div class="card" onclick="window.location.href='productsreport.php';">
+    <h2>Products Report</h2>
+    <canvas id="productQuantityChart"></canvas>
+    <p>Total products: <?php echo array_sum($productQuantities); ?></p>
+</div>
 
         <!-- Orders Card -->
         <div class="card" onclick="window.location.href='ordersreport.php';">
@@ -91,7 +158,42 @@
             <canvas id="ordersChart"></canvas>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Product data fetched from PHP
+    const productNames = <?php echo json_encode($productNames); ?>;
+    const productQuantities = <?php echo json_encode($productQuantities); ?>;
+    
+    // Generate random colors for each product
+    const generateRandomColor = () => {
+        return '#' + Math.floor(Math.random()*16777215).toString(16);
+    };
+    const backgroundColors = productNames.map(() => generateRandomColor());
 
+    // Render bar chart
+    const productQuantityChartCanvas = document.getElementById('productQuantityChart').getContext('2d');
+    const productQuantityChart = new Chart(productQuantityChartCanvas, {
+        type: 'bar',
+        data: {
+            labels: productNames,
+            datasets: [{
+                label: 'Product Quantity',
+                data: productQuantities,
+                backgroundColor: backgroundColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
     <script>
         // Sample sales data
         const salesData = {
@@ -117,17 +219,17 @@
             }]
         };
 
-        // Sample users data
-        const usersData = {
-            labels: ['Admin', 'Customer', 'Guest'],
-            datasets: [{
-                label: 'Users',
-                data: [20, 50, 30],
-                backgroundColor: ['rgba(255, 206, 86, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(75, 192, 192, 0.2)'],
-                borderColor: ['rgba(255, 206, 86, 1)', 'rgba(54, 162, 235, 1)', 'rgba(75, 192, 192, 1)'],
-                borderWidth: 1
-            }]
-        };
+        // Sample users data (replace with actual data fetched from PHP)
+const usersData = {
+    labels: <?php echo $labelsJSON; ?>,
+    datasets: [{
+        label: 'Users',
+        data: <?php echo $dataJSON; ?>,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+    }]
+};
 
         // Sample orders data
         const ordersData = {
@@ -169,13 +271,20 @@
             }
         });
 
-        // Render users chart
-        const usersChartCanvas = document.getElementById('usersChart').getContext('2d');
-        const usersChart = new Chart(usersChartCanvas, {
-            type: 'doughnut',
-            data: usersData,
-            options: {}
-        });
+    // Render users chart as a bar chart
+const usersChartCanvas = document.getElementById('usersChart').getContext('2d');
+const usersChart = new Chart(usersChartCanvas, {
+    type: 'bar',
+    data: usersData,
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
 
         // Render orders chart
         const ordersChartCanvas = document.getElementById('ordersChart').getContext('2d');
@@ -185,5 +294,6 @@
             options: {}
         });
     </script>
+    
 </body>
 </html>

@@ -1,3 +1,6 @@
+<?php
+require_once('connection.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,7 +53,38 @@
             background-color: #45a049;
         }
     </style>
+    <style>
+    .header {
+        background-color: #007bff;
+        padding: 10px 0;
+    }
+
+    .flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: center;
+    }
+
+    .navbar a {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 10px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .navbar a:hover {
+        background-color: #0056b3;
+    }
+</style>
 </head>
+<br><br><br>
 <body>
 <header class="header">
         <div class="flex">
@@ -109,6 +143,7 @@
             };
             xhr.send("productCode=" + productCode + "&change=" + change);
         }
+    
     </script>
 </body>
 </html>
