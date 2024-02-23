@@ -16,7 +16,6 @@ if(isset($_POST['submit'])) {
         // Assuming default status is 1
         $STATUS = 1;
 
-
         // Perform SQL query to insert form data into the database
         $sqlenquiry = "INSERT INTO enquiries (NAME, EMAIL, MESSAGE, STATUS, DATECREATED) VALUES ('$NAME', '$EMAIL', '$MESSAGE', '$STATUS', '$TODAY')";
 
@@ -31,10 +30,39 @@ if(isset($_POST['submit'])) {
         // Close database connection
         //mysqli_close($con);
     }
-    
-
 }
+
 ?>
+
+<?php
+// Retrieve data from POST request
+if(isset($_POST['cartData'])) {
+    // Retrieve data from POST request
+    $cartData = json_decode($_POST['cartData'], true);
+    $customerId = $_POST['customerId'];
+    $totalAmount = $_POST['totalAmount'];
+    $paymentType = $_POST['paymentType'];
+    $paymentId = $_POST['paymentId'];
+    $month = $_POST['month'];
+    $year = $_POST['year'];
+
+    // Prepare and execute SQL statement to insert data into database
+    $cartDataJSON = json_encode($cartData); // Convert cart data to JSON
+    $sql = "INSERT INTO sales (MonthOfSale, YearOfSale, ItemSold, CustomerId, TotalAmount, PaymentType, PaymentId) 
+            VALUES ('$month', '$year', '$cartDataJSON', '$customerId', '$totalAmount', '$paymentType', '$paymentId')";
+
+    if (mysqli_query($con, $sql)) {
+        echo "Data inserted successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($con);
+    }
+}
+
+// Close connection
+//$con->close();
+?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -216,6 +244,117 @@ if(isset($_POST['submit'])) {
     background-color: #bbb;
 }
 
+
+
+
+
+
+/*text style*/
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+}
+
+/* Close button styles */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Checkout button styles */
+#checkout-btn {
+    border: 2px solid black;
+    font-size: 16px;
+    border-radius: 20px;
+    margin: 20px;
+    padding: 10px 20px;
+    background: orange;
+    width: 150px;
+    height: 50px;
+    color: black;
+    cursor: pointer;
+}
+
+#checkout-btn:hover {
+    background: #ffa500;
+}
+
+#cart-summary p {
+    font-weight: bold;
+}
+#payment-icons img {
+    width: 120px; /* Adjust the width as needed */
+    margin-right: 10px; /* Adjust the spacing between icons */
+}
+/* CSS styles */
+#payment-icons input[type="radio"] {
+    display: none; /* Hide the radio buttons */
+}
+
+#payment-icons label.payment-method {
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+#payment-icons label.payment-method img {
+    width: 120px; /* Adjust the width as needed */
+    margin-right: 10px; /* Adjust the spacing between icons */
+    border: 2px solid transparent; /* Add border to icons */
+}
+
+#payment-icons label.payment-method:hover img {
+    border-color: orange; /* Change border color on hover */
+}
+
+#payment-icons input[type="radio"]:checked + label.payment-method img {
+    border-color: orange; /* Change border color for checked icon */
+}
+/* Checkout button style */
+.checkout-button {
+    border: none;
+    font-size: 16px;
+    border-radius: 20px;
+    margin: 20px;
+    padding: 10px 20px;
+    width: 150px;
+    height: 50px;
+    color: white;
+    background-color: orange;
+    cursor: pointer;
+    outline: none; /* Remove focus outline */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+.checkout-button:hover {
+    background-color: #ff8c00; /* Darker orange on hover */
+}
 
 
 
@@ -722,7 +861,92 @@ function updateCheckoutButton(paymentMethod) {
 
 
     </script>
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+     // Define cartItems and cartModal globally
+const cartItems = document.getElementById('cart-items');
+const cartModal = document.getElementById('cart-modal');
+
+$(document).ready(function() {
+    $('#checkout-btn').click(function() {
+        // Retrieve cartItems from localStorage
+        var cartItemsData = JSON.parse(localStorage.getItem('cartItems'));
+        if (!cartItems || cartItems.length === 0) {
+            alert('Your cart is empty. Please add items before checking out.');
+            return; // Stop execution if cart is empty
+        }else{
+        // Serialize cart data
+        var cartData = JSON.stringify(cartItemsData);
+
+        // Get current month and year
+        var currentMonth = new Date().getMonth() + 1; // Month (1-12)
+        var currentYear = new Date().getFullYear(); // Full four-digit year
+
+        // Additional data
+        var customerId = "test@gmail.com";
+        var totalAmount = 222;
+        var paymentType = "Mpesa";
+        var paymentId = "WDVK23VJF83";
+
+        // AJAX request to send data to PHP script
+        $.ajax({
+            type: 'POST',
+            url: 'grocery.php',
+            data: {
+                cartData: cartData,
+                month: currentMonth,
+                year: currentYear,
+                customerId: customerId,
+                totalAmount: totalAmount,
+                paymentType: paymentType,
+                paymentId: paymentId
+            },
+            success: function(response) {
+                console.log(response); // Log response from PHP script
+                
+                // Handle success response if needed
+                
+                // Clear the local storage
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('totalamount');
+
+                // Clear the cart items display
+                cartItems.innerHTML = '';
+
+                // Close the cart popup
+                cartModal.style.display = 'none';
+
+                // Show success message
+                const successMessage = document.createElement('div');
+                successMessage.textContent = 'Checkout successful!';
+                successMessage.style.color = 'green';
+                successMessage.style.fontSize = '24px'; 
+                successMessage.style.position = 'fixed';
+                successMessage.style.top = '50%';
+                successMessage.style.left = '50%';
+                successMessage.style.transform = 'translate(-50%, -50%)';
+                successMessage.style.backgroundColor = 'white';
+                successMessage.style.padding = '80px';
+                successMessage.style.borderRadius = 'f80px';
+                successMessage.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.3)';
+                document.body.appendChild(successMessage);
+
+                // Hide the success message after 5 seconds
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            },
+            error: function(xhr, status, error) {
+                console.error(error); // Log error message
+                // Handle error if needed
+            }
+        });
+    }
+    });
+});
+
+    </script>
+</head>
 </body>
 
 </html>
