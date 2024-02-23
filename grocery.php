@@ -371,29 +371,37 @@ if(isset($_POST['cartData'])) {
     display: inline-block;
 }
 
+.user-popup-container {
+    position: relative;
+    background:orange;
+}
+
 .user-popup {
+    background:orange;
     display: none;
-    position: fixed;
-    top: 10%;
-    left: 95%;
-    transform: translate(-50%, -50%);
-    
-    background-color: #f1f1f1;
+    position: absolute; /* Change position to absolute */
+    top: calc(100% + 10px); /* Position below the user-menu */
+    left: 0; /* Align with the left edge of the user-menu */
+    background-color: orange;
     min-width: 120px;
-    max-height: 120px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     z-index: 1000; /* Adjust the z-index value as needed */
 }
+
+.user-menu:hover .user-popup {
+    display: block; /* Show popup on hover */
+}
+
 .user-popup a {
     color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
 }
-
 .user-popup a:hover {
-    background-color: #f9f9f9;
+    background-color:red; /* Change background color on hover */
 }
+
 
 
 
@@ -422,8 +430,8 @@ if(isset($_POST['cartData'])) {
             <div class="fas fa-shopping-cart" id="cart-btn"><span id="itemsincart">0</span></div>
             <div class="user-menu">
     <div class="fas fa-user" id="login-btn"></div>
-    <div class="user-popup" id="user-popup">
-        <a href="profile.php"><?php echo $_SESSION['user_email']; ?></a>
+    <div class="user-popup" id="user-popup" style="width:170px; height:120px; background:orange;">
+        <a href="profile.php"style="font-size:16px;"><?php echo $_SESSION['user_email']; ?></a>
         <a href="logout.php">Logout</a>
     </div>
         </div>
