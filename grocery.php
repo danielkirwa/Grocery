@@ -2,6 +2,16 @@
 require_once('connection.php');
 ?>
 <?php
+// check session
+session_start();
+if(!isset($_SESSION['user_email'])) {
+    // If not logged in, redirect to the login page
+    header("Location: auth.php");
+    exit();
+}
+
+
+ 
 if(isset($_POST['submit'])) {
     // Retrieve form data
     $NAME = $_POST['NAME'];
@@ -39,7 +49,7 @@ if(isset($_POST['submit'])) {
 if(isset($_POST['cartData'])) {
     // Retrieve data from POST request
     $cartData = json_decode($_POST['cartData'], true);
-    $customerId = $_POST['customerId'];
+    $customerId = $_SESSION['user_email'];
     $totalAmount = $_POST['totalAmount'];
     $paymentType = $_POST['paymentType'];
     $paymentId = $_POST['paymentId'];
@@ -356,6 +366,35 @@ if(isset($_POST['cartData'])) {
     background-color: #ff8c00; /* Darker orange on hover */
 }
 
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.user-popup {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 95%;
+    transform: translate(-50%, -50%);
+    
+    background-color: #f1f1f1;
+    min-width: 120px;
+    max-height: 120px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000; /* Adjust the z-index value as needed */
+}
+.user-popup a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.user-popup a:hover {
+    background-color: #f9f9f9;
+}
+
 
 
 
@@ -381,7 +420,12 @@ if(isset($_POST['cartData'])) {
             <div class="fas fa-bars" id="menu-btn"></div>
             <div class="fas fa-search" id="search-btn"></div>
             <div class="fas fa-shopping-cart" id="cart-btn"><span id="itemsincart">0</span></div>
-            <div class="fas fa-user" id="login-btn"></div>
+            <div class="user-menu">
+    <div class="fas fa-user" id="login-btn"></div>
+    <div class="user-popup" id="user-popup">
+        <a href="profile.php"><?php echo $_SESSION['user_email']; ?></a>
+        <a href="logout.php">Logout</a>
+    </div>
         </div>
         <form action="" class="search-form">
             <input type="search" id="search-box" placeholder="search here...">
@@ -622,10 +666,31 @@ if(isset($_POST['cartData'])) {
             <!-- Add more social media icons as needed -->
         </div>
     </footer>
+
+   
+</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
     <script src="js/grocery.js"></script>
     <script>
+ // for profile view pop up 
+ document.addEventListener('DOMContentLoaded', function() {
+    var loginBtn = document.getElementById('login-btn');
+    var userPopup = document.getElementById('user-popup');
+    
+    loginBtn.addEventListener('click', function() {
+        userPopup.style.display = (userPopup.style.display === 'block') ? 'none' : 'block';
+    });
+
+    // Close popup when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!userPopup.contains(event.target) && event.target !== loginBtn) {
+            userPopup.style.display = 'none';
+        }
+    });
+});
+
+
         document.addEventListener('DOMContentLoaded', function () {
             let TotalAmount = parseFloat(localStorage.getItem("totalamount")) || 0;
             let cartItemList = JSON.parse(localStorage.getItem("cartItems")) || [];

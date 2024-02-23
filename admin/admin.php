@@ -1,5 +1,20 @@
 <?php
-require_once('connection.php');
+require_once('../connection.php');
+// check seesion
+session_start();
+
+// Check if the user is logged in
+if(!isset($_SESSION['user_email'])) {
+    // If not logged in, redirect to the login page
+    header("Location: ../auth.php");
+    exit();
+}
+if($_SESSION['priviledge'] !== 'admin') {
+    // If not authorized, redirect to the login page
+    header("Location: ../auth.php");
+    exit();
+}
+
 ?>
 
 <?php
@@ -70,43 +85,63 @@ if(isset($_POST['removeproduct'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Products</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="../css/admin.css">
     <style>
-    .header {
-        background-color: #333;
-        padding: 10px 0;
-    }
-
-    .header nav {
-        text-align: center;
-    }
-
-    .header nav a {
-        color: #fff;
-        text-decoration: none;
-        padding: 10px 20px;
-        margin: 0 10px;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-    }
-
-    .header nav a:hover {
-        background-color: #555;
-    }
+   body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        .nav-links {
+            margin-top: 10px;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .card {
+            width: 300px;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .chart-container {
+            width: 600px;
+            margin-top: 20px;
+        }
 </style>
 </head>
 <body>
-<header class="header">
-    <div class="">
-        <nav class="">
+<div class="navbar">
+        <h1><?php echo $_SESSION['user_email']; ?></h1>
+        <div class="nav-links">
             <a href="dashboard.php">Dashboard</a>
             <a href="admin.php">Add Products</a>
             <a href="products.php">View Products</a>
             <a href="user.php">System Users</a>
             <a href="customer.php">Customer Feedback</a>
-        </nav>
+        </div>
     </div>
-</header>
 
 <div class="container">
     <form action="" method="post" class="addproduct" enctype="multipart/form-data">
