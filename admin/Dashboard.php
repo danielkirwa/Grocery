@@ -1,7 +1,24 @@
 <?php
-require_once('connection.php');
+require_once('../connection.php');
 ?>
 <?php
+// check seesion
+session_start();
+
+// Check if the user is logged in
+if(!isset($_SESSION['user_email'])) {
+    // If not logged in, redirect to the login page
+    header("Location: ../auth.php");
+    exit();
+}
+if($_SESSION['priviledge'] !== 'admin') {
+    // If not authorized, redirect to the login page
+    header("Location: ../auth.php");
+    exit();
+}
+
+
+
 // Your PHP code for database connection and fetching data comes here
 // Fetch data from database
 $sql = "SELECT COUNT(*) AS total_users FROM register";
@@ -37,7 +54,7 @@ $labelsJSON = json_encode($labels);
 $dataJSON = json_encode($data);
 ?>
 <?php
-require_once('connection.php');
+require_once('../connection.php');
 
 $productNames = [];
 $productQuantities = [];
@@ -112,13 +129,14 @@ mysqli_close($con);
 </head>
 <body>
     <div class="navbar">
-        <h1>Admin Dashboard</h1>
+        <h1><?php echo $_SESSION['user_email']; ?></h1>
         <div class="nav-links">
             <a href="dashboard.php">Dashboard</a>
             <a href="admin.php">Add Products</a>
             <a href="products.php">View Products</a>
             <a href="user.php">System Users</a>
             <a href="customer.php">Customer Feedback</a>
+            <a href="../logout.php">Log out</a>
         </div>
     </div>
 

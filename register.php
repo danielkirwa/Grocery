@@ -79,8 +79,8 @@ else{
         </div>
         <button type="submit" name="register" class="login-button">Register</button>
     </form>
-        <a href="index.php">back to log in</a>
-    <a href="home.php">back home</a>
+        <a href="auth.php">back to log in</a>
+    <a href="index.php">back home</a>
     </div>
     <script>
     function checkEmailValidity(input) {
