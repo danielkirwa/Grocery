@@ -55,6 +55,7 @@ if(isset($_POST['cartData'])) {
     $paymentId = $_POST['paymentId'];
     $month = $_POST['month'];
     $year = $_POST['year'];
+    header("Location: STKpush.php");
 
     // Prepare and execute SQL statement to insert data into database
     $cartDataJSON = json_encode($cartData); // Convert cart data to JSON
@@ -1010,7 +1011,7 @@ $(document).ready(function() {
                 }, 5000);
             },
             error: function(xhr, status, error) {
-                console.error(error); // Log error message
+                console.error(error);  // Log error message
                 // Handle error if needed
             }
         });
