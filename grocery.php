@@ -526,7 +526,8 @@ if(isset($_POST['cartData'])) {
 </section>
 
 <div id="cart-modal" class="modal">
-    <div class="modal-content">
+<form action="stkkpush.php"> 
+<div class="modal-content">
         <span class="close">&times;</span>
         <h2>Shopping Cart</h2>
         <div id="cart-items" style="margin: 20px;">
@@ -551,6 +552,7 @@ if(isset($_POST['cartData'])) {
         <button id="checkout-btn" class="checkout-button"  style="width: 200px;font-weight: bold;">Checkout</button>
 
     </div>
+                </form>
 </div>
 
 

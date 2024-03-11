@@ -1,7 +1,6 @@
 <?php
 require_once('connection.php');
-?>
-<?php
+
 //YOU MPESA API KEYS
 $consumerKey = "t5ZGoPXN33y3A9KJHcULutzGjzXEswJiehqmLAt0MToU67SI";
 $consumerSecret = "nu87lQHSRCNAZ4qE86mtqT3uVuaq7S1LcAExADeKHxdCk2ZxzPGIeWt2dDbl49Yi"; 

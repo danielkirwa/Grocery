@@ -5,7 +5,7 @@ require_once('connection.php');
 header("Content-Type: application/json");
 $stkCallbackResponse = file_get_contents('php://input');
 $logFile = "Mpesastkresponse.json";
-$log = fopen($logFile, "a");
+$log = fopen($logFile, "w");
 fwrite($log, $stkCallbackResponse);
 fclose($log);
 
@@ -17,13 +17,14 @@ $ResultCode = $data->Body->stkCallback->ResultCode;
 $ResultDesc = $data->Body->stkCallback->ResultDesc;
 $Amount = $data->Body->stkCallback->CallbackMetadata->Item[0]->Value;
 $TransactionId = $data->Body->stkCallback->CallbackMetadata->Item[1]->Value;
-$UserPhoneNumber = $data->Body->stkCallback->CallbackMetadata->Item[4]->Value;
+$UserPhoneNumber = $data->Body->stkCallback->CallbackMetadata->Item[3]->Value;
 //CHECK IF THE TRASACTION WAS SUCCESSFUL 
-if ($ResultCode == 0) {
-  //STORE THE TRANSACTION DETAILS IN THE DATABASE
-  $sql = "INSERT INTO MyGuests (MerchantRequestID,CheckoutRequestID,ResultCode,Amount,MpesaReceiptNumber,PhoneNumber)
-  VALUES ('$MerchantRequestID','$CheckoutRequestID','$ResultCode','$Amount','$TransactionId','$UserPhoneNumber')";
-//mysqli_query($database, "INSERT INTO transactions (MerchantRequestID,CheckoutRequestID,ResultCode,Amount,MpesaReceiptNumber,PhoneNumber) VALUES ('$MerchantRequestID','$CheckoutRequestID','$ResultCode','$Amount','$TransactionId','$UserPhoneNumber')");
-}
+// if ($ResultCode == 0) {
+//   //STORE THE TRANSACTION DETAILS IN THE DATABASE
+//   $sql = "INSERT INTO transactions (MerchantRequestID,CheckoutRequestID,ResultCode,Amount,MpesaReceiptNumber,PhoneNumber)
+//   VALUES ('$MerchantRequestID','$CheckoutRequestID','$ResultCode','$Amount','$TransactionId','$UserPhoneNumber')";
+// //mysqli_query($database, "INSERT INTO transactions (MerchantRequestID,CheckoutRequestID,ResultCode,Amount,MpesaReceiptNumber,PhoneNumber) VALUES ('$MerchantRequestID','$CheckoutRequestID','$ResultCode','$Amount','$TransactionId','$UserPhoneNumber')");
+// }
+echo $UserPhoneNumber;
 
 ?>
