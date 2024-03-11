@@ -55,7 +55,7 @@ if(isset($_POST['cartData'])) {
     $paymentId = $_POST['paymentId'];
     $month = $_POST['month'];
     $year = $_POST['year'];
-    header("Location: STKpush.php");
+
 
     // Prepare and execute SQL statement to insert data into database
     $cartDataJSON = json_encode($cartData); // Convert cart data to JSON
@@ -915,23 +915,23 @@ document.querySelectorAll('input[name="payment-method"]').forEach(function(radio
 });
 
 
-// Function to update checkout button text based on selected payment method
-function updateCheckoutButton(paymentMethod) {
-    let checkoutButton = document.getElementById('checkout-btn');
-    switch (paymentMethod) {
-        case 'mpesa':
-            checkoutButton.textContent = 'Checkout with Mpesa';
-            break;
-        case 'paypal':
-            checkoutButton.textContent = 'Checkout with PayPal';
-            break;
-        case 'visa':
-            checkoutButton.textContent = 'Checkout with Visa';
-            break;
-        default:
-            checkoutButton.textContent = 'Checkout';
+    // Function to update checkout button text based on selected payment method
+    function updateCheckoutButton(paymentMethod) {
+        let checkoutButton = document.getElementById('checkout-btn');
+        switch (paymentMethod) {
+            case 'mpesa':
+                checkoutButton.textContent = 'Checkout with Mpesa';
+                break;
+            case 'paypal':
+                checkoutButton.textContent = 'Checkout with PayPal';
+                break;
+            case 'visa':
+                checkoutButton.textContent = 'Checkout with Visa';
+                break;
+            default:
+                checkoutButton.textContent = 'Checkout';
+        }
     }
-}
 
 
     </script>
