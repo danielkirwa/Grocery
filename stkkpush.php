@@ -6,7 +6,7 @@ require_once('connection.php');
 include 'accesstoken.php';
 date_default_timezone_set('Africa/Nairobi');
 $processrequestUrl = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
-$callbackurl = 'https://af85-41-212-117-244.ngrok-free.app/Grocery';
+$callbackurl = 'https://9d98-105-160-77-162.ngrok-free.app/Grocery';
 $passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 $BusinessShortCode = '174379';
 $Timestamp = date('YmdHis');
