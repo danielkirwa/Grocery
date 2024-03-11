@@ -19,7 +19,7 @@ $Amount = $data->Body->stkCallback->CallbackMetadata->Item[0]->Value;
 $TransactionId = $data->Body->stkCallback->CallbackMetadata->Item[1]->Value;
 $UserPhoneNumber = $data->Body->stkCallback->CallbackMetadata->Item[4]->Value;
 //CHECK IF THE TRASACTION WAS SUCCESSFUL 
-if ($ResultCode == 0) {
+//if ($ResultCode == 0) {
   //STORE THE TRANSACTION DETAILS IN THE DATABASE
 mysqli_query($database, "INSERT INTO transactions (MerchantRequestID,CheckoutRequestID,ResultCode,Amount,MpesaReceiptNumber,PhoneNumber) VALUES ('$MerchantRequestID','$CheckoutRequestID','$ResultCode','$Amount','$TransactionId','$UserPhoneNumber')");
-}
+//}
