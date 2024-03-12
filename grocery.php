@@ -1010,7 +1010,7 @@ $(document).ready(function() {
                 // Hide the success message after 5 seconds
                 setTimeout(function() {
                     successMessage.style.display = 'none';
-                }, 5000);
+                }, 10000);
             },
             error: function(xhr, status, error) {
                 console.error(error);  // Log error message

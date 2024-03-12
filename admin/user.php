@@ -327,7 +327,18 @@ $result = mysqli_query($con, $sqlSelectUsers);
             }
         }
         function printReport() {
-        window.print();
+       // window.print();
+       var divToPrint = document.getElementById('mytable');
+    var originalDisplay = divToPrint.style.display;
+
+    // Make the div visible before printing
+    divToPrint.style.display = 'block';
+
+    // Print the div content
+    window.print();
+
+    // Restore the original display property
+    divToPrint.style.display = originalDisplay;
     }
     </script>
 </head>
@@ -346,7 +357,7 @@ $result = mysqli_query($con, $sqlSelectUsers);
 <h2>User Management</h2>
 
 <form method="POST">
-    <table>
+    <table id="mytable">
         <tr>
             <th>Select</th>
             <th>Name</th>
