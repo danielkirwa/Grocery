@@ -45,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/adminreply.css">
+
     <style>
     .header {
         background-color: #007bff;
@@ -167,6 +168,9 @@ body {
             <a href="customer.php">Customer Feedback</a>
         </div>
     </div>
+    <div id="printpage">
+    <h2 style="text-align: center;">Enquiries</h2>
+   <h2 style="text-align: center;" id="dynamicHeading" >Enquiries</h2>
 
 <?php
     // Display all data from the enquiries table
@@ -176,8 +180,9 @@ body {
     $count = 1; // Initialize count variable
 
     if (mysqli_num_rows($result) > 0) {
-        echo "<h2>Enquiries</h2>";
+        //echo "<h2>Enquiries</h2>";
         echo "<table border='1'>";
+       // echo "<tr><caption>Enquiries</caption></tr>"; 
         echo "<tr><th>Count</th><th>ID</th><th>Name</th><th>Email</th><th>Message</th><th>Date Created</th><th>Status</th><th>Action</th></tr>";
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>";
@@ -197,7 +202,10 @@ body {
         echo "No enquiries found.";
     }
 ?>
-<div>      <button class="print-button" onclick="window.print()">Print enquiries</button></div>
+</div>
+<div>     
+     <button class="print-button" onclick="generatePDF()">Print enquiries</button>
+</div>
 
 <!-- Added this div for the pop-up form to reply-->
 <div id="respondForm" class="popup-form">
@@ -212,6 +220,7 @@ body {
         <button type="submit">Send</button>
     </form>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.0/html2pdf.bundle.min.js"></script>
 
 <script>
     // Added this JavaScript for showing and hiding the pop-up form
@@ -244,6 +253,35 @@ document.querySelectorAll('.respond-link').forEach(item => {
     });
 });
 
+
+function generatePDF() {
+    const content = document.getElementById('printpage');
+    const timestamp = new Date().toISOString().replace(/:/g, '-');
+    const filename = `Tumaini_grocery_${timestamp}.pdf`;
+    html2pdf()
+        .from(content)
+        .save(filename);
+}
+
+</script>
+<script>
+// Function to update the heading with the current date and time
+function updateHeading() {
+    var currentDate = new Date();
+    var formattedDate = currentDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    var formattedTime = currentDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true });
+
+    // Concatenate date and time
+    var dateTimeString = formattedDate + ' ' + formattedTime;
+
+    // Set the heading text
+    document.getElementById('dynamicHeading').textContent = dateTimeString;
+}
+
+// Call the function to update the heading when the page loads
+window.onload = function() {
+    updateHeading();
+};
 </script>
 </body>
 </html>
