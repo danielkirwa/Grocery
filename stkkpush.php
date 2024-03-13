@@ -1,4 +1,11 @@
 <?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get the values of the form fields
+    $stktotal = $_POST["stktotal"];
+    $txtmpesa = $_POST["txtmpesa"];
+    
+
+
 require_once('connection.php');
 
 $NGROK_URL = 'https://0b12-41-89-10-241.ngrok-free.app';
@@ -14,8 +21,8 @@ $BusinessShortCode = '174379';
 $Timestamp = date('YmdHis');
 // ENCRIPT  DATA TO GET PASSWORD
 $Password = base64_encode($BusinessShortCode . $passkey . $Timestamp);
-$phone = '254759419486';//phone number to receive the stk push
-$money = '1';
+$phone = $txtmpesa;//phone number to receive the stk push
+$money = $stktotal;
 $PartyA = $phone;
 $PartyB = '254708374149';
 $AccountReference = 'CompanyXLTD';
@@ -54,3 +61,6 @@ if ($ResponseCode == "0") {
 echo "The CheckoutRequestID for this transaction is : " . $CheckoutRequestID;
 }
 header("Location: grocery.php");
+}else{
+  echo "error setting totals and phone number";
+}
