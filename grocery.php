@@ -501,7 +501,7 @@ if(isset($_POST['cartData'])) {
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<div class='product'>";
                 echo "<h3>" . $row["productname"] . "</h3>";
-                echo "<p>Price: $" . $row["productprice"] . "</p>";
+                echo "<p>Price:Ksh " . $row["productprice"] . "</p>";
                 echo "<p>Quantity: <span id='quantity-" . $row["productcode"] . "' class='itemsavailable'>" . $row["productquantity"] . "</span></p>";
                 echo "<p>Description: " . $row["productdescription"] . "</p>";
                 echo "<img src='" . $row["file"] . "' alt='" . $row["productname"] . "'>";
@@ -526,7 +526,7 @@ if(isset($_POST['cartData'])) {
 </section>
 
 <div id="cart-modal" class="modal">
-<form action="stkkpush.php" method="POST"> 
+<form action="stkkpush.php" method="POST" method="POST"> 
 <div class="modal-content">
         <span class="close">&times;</span>
         <h2>My products</h2>
@@ -534,22 +534,20 @@ if(isset($_POST['cartData'])) {
             <!-- Cart items will be displayed here -->
         </div>
         <div id="cart-summary" style="margin: 20px;">
-            <!-- <p>Subtotal: <span id="subtotal">$0.00</span></p>
-            <p>Discount: <span id="discount">$0.00</span></p> -->
+           
             <p>Total: <span id="total">$0.00</span></p>
             <input type="hidden" name="stktotal" id="stktotal" value="">
+            <input type="hidden" name="stktotal" id="stktotal" value="">
             <p>Date/Time: <span id="timestamp"></span></p>
-            <!-- <p>Payment Methods:</p> -->
+           
             <div id="payment-icons">
             <input type="radio" id="mpesa" name="payment-method" value="mpesa">
                 <label for="mpesa" class="payment-method"><img src="https://www.safaricom.co.ke/images/MicrosoftTeams-image.jpg" alt="M-Pesa" title="M-Pesa"></label>
-                <!-- <input type="radio" id="paypal" name="payment-method" value="paypal"> -->
-                <!-- <label for="paypal" class="payment-method"><img src="https://i.pcmag.com/imagery/reviews/068BjcjwBw0snwHIq0KNo5m-15.fit_lim.size_1050x591.v1602794215.png" alt="PayPal" title="PayPal"></label> -->
-                <!-- <input type="radio" id="visa" name="payment-method" value="visa"> -->
-                <!-- <label for="visa" class="payment-method"><img src="https://www.paymentscardsandmobile.com/wp-content/uploads/2021/11/visa-mastercard-logos.jpg" alt="Visa" title="Visa"></label> -->
-                
+              
             </div>
             <label>Confirm the number below or change </label></br>
+            <input type="text" id="txtmpesa" name="txtmpesa" value="" placeholder="254712345678">
+            <label>Input your phone number</label></br>
             <input type="text" id="txtmpesa" name="txtmpesa" value="" placeholder="254712345678">
         </div>
         <button id="checkout-btn" class="checkout-button"  style="width: 200px;font-weight: bold;" type="submit">Checkout</button>
@@ -800,76 +798,7 @@ if(isset($_POST['cartData'])) {
                     displayCartItems();
                 });
             });
-            //added the below script code for addition and remove
-            // Add event listeners for remove buttons
-// removeButtons.forEach(button => {
-//     button.addEventListener('click', function () {
-//         const index = parseInt(this.dataset.index);
-//         const productName = this.dataset.productName;
-//         const productPrice = parseFloat(this.dataset.productPrice);
-//         const quantity = cartItemList[index].quantity;
-
-//         if (quantity > 0) {
-//             // Update UI
-//             labels[index].textContent = quantity - 1;
-
-//             // Update total quantity of items in cart span
-//             totalItemsInCart -= 1;
-//             itemsInCart.textContent = totalItemsInCart;
-
-//             // Update TotalAmount
-//             TotalAmount -= productPrice;
-
-//             // Update cartItemList
-//             cartItemList[index].quantity -= 1;
-//             cartItemList[index].totalPrice -= productPrice;
-
-//             // If quantity becomes zero, remove the item from the cartItemList
-//             if (cartItemList[index].quantity === 0) {
-//                 cartItemList.splice(index, 1);
-//             }
-
-//             // Update localStorage
-//             localStorage.setItem("cartItems", JSON.stringify(cartItemList));
-//             localStorage.setItem("totalamount", TotalAmount);
-
-//             // Update cart items display
-//             displayCartItems();
-//         }
-//     });
-// });
-
-// // Add event listeners for addition buttons
-// additionButtons.forEach(button => {
-//     button.addEventListener('click', function () {
-//         const index = parseInt(this.dataset.index);
-//         const productName = this.dataset.productName;
-//         const productPrice = parseFloat(this.dataset.productPrice);
-//         const quantity = cartItemList[index].quantity;
-
-//         // Update UI
-//         labels[index].textContent = quantity + 1;
-
-//         // Update total quantity of items in cart span
-//         totalItemsInCart += 1;
-//         itemsInCart.textContent = totalItemsInCart;
-
-//         // Update TotalAmount
-//         TotalAmount += productPrice;
-
-//         // Update cartItemList
-//         cartItemList[index].quantity += 1;
-//         cartItemList[index].totalPrice += productPrice;
-
-//         // Update localStorage
-//         localStorage.setItem("cartItems", JSON.stringify(cartItemList));
-//         localStorage.setItem("totalamount", TotalAmount);
-
-//         // Update cart items display
-//         displayCartItems();
-//     });
-// });
-//end of the script code i added
+          
 
             document.getElementById('cart-btn').addEventListener('click', function () {
                 cartModal.style.display = 'block';
@@ -996,7 +925,7 @@ $(document).ready(function() {
 
                 // Show success message
                 const successMessage = document.createElement('div');
-                successMessage.textContent = 'Checkout successful!';
+                successMessage.textContent = 'Enter your pin to complete the payment!';
                 successMessage.style.color = 'green';
                 successMessage.style.fontSize = '24px'; 
                 successMessage.style.position = 'fixed';

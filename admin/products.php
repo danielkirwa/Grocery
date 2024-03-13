@@ -139,7 +139,7 @@ if($_SESSION['priviledge'] !== 'admin') {
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<div class='product'>";
                 echo "<h3>" . $row["productname"] . "</h3>";
-                echo "<p>Price: $" . $row["productprice"] . "</p>";
+                echo "<p>Price: Ksh" . $row["productprice"] . "</p>";
                 echo "<p>Quantity: <span id='quantity-" . $row["productcode"] . "'>" . $row["productquantity"] . "</span></p>";
                 echo "<p>Description: " . $row["productdescription"] . "</p>";
                 echo "<img src='" . $row["file"] . "' alt='" . $row["productname"] . "'>";
