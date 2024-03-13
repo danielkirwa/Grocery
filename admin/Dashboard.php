@@ -129,7 +129,7 @@ mysqli_close($con);
 </head>
 <body>
     <div class="navbar">
-        <h1><?php echo $_SESSION['user_email']; ?></h1>
+        <h1>Tumaini Groceries</h1>
         <div class="nav-links">
             <a href="dashboard.php">Dashboard</a>
             <a href="admin.php">Add Products</a>

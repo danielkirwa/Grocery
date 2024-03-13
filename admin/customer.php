@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/adminreply.css">
 
+
     <style>
     .header {
         background-color: #007bff;
@@ -159,7 +160,7 @@ body {
 </head>
 <body>
 <div class="navbar">
-        <h1><?php echo $_SESSION['user_email']; ?></h1>
+        <h1>Tumaini Groceries</h1>
         <div class="nav-links">
             <a href="dashboard.php">Dashboard</a>
             <a href="admin.php">Add Products</a>
@@ -167,7 +168,11 @@ body {
             <a href="user.php">System Users</a>
             <a href="customer.php">Customer Feedback</a>
         </div>
+        <!-- wrapped the code in div print page -->
     </div>
+    <div id="printpage">
+    <h2 style="text-align: center;">Enquiries</h2>
+   <h2 style="text-align: center;" id="dynamicHeading" >Enquiries</h2>
     <div id="printpage">
     <h2 style="text-align: center;">Enquiries</h2>
    <h2 style="text-align: center;" id="dynamicHeading" >Enquiries</h2>
@@ -180,8 +185,9 @@ body {
     $count = 1; // Initialize count variable
 
     if (mysqli_num_rows($result) > 0) {
-        //echo "<h2>Enquiries</h2>";
+        ////echo "<h2>Enquiries</h2>";
         echo "<table border='1'>";
+       // echo "<tr><caption>Enquiries</caption></tr>"; 
        // echo "<tr><caption>Enquiries</caption></tr>"; 
         echo "<tr><th>Count</th><th>ID</th><th>Name</th><th>Email</th><th>Message</th><th>Date Created</th><th>Status</th><th>Action</th></tr>";
         while ($row = mysqli_fetch_assoc($result)) {

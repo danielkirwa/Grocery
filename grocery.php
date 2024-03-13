@@ -529,23 +529,23 @@ if(isset($_POST['cartData'])) {
 <form action="stkkpush.php"> 
 <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>Shopping Cart</h2>
+        <h2>My products</h2>
         <div id="cart-items" style="margin: 20px;">
             <!-- Cart items will be displayed here -->
         </div>
         <div id="cart-summary" style="margin: 20px;">
-            <p>Subtotal: <span id="subtotal">$0.00</span></p>
-            <p>Discount: <span id="discount">$0.00</span></p>
+            <!-- <p>Subtotal: <span id="subtotal">$0.00</span></p>
+            <p>Discount: <span id="discount">$0.00</span></p> -->
             <p>Total: <span id="total">$0.00</span></p>
             <p>Date/Time: <span id="timestamp"></span></p>
-            <p>Payment Methods:</p>
+            <!-- <p>Payment Methods:</p> -->
             <div id="payment-icons">
             <input type="radio" id="mpesa" name="payment-method" value="mpesa">
                 <label for="mpesa" class="payment-method"><img src="https://www.safaricom.co.ke/images/MicrosoftTeams-image.jpg" alt="M-Pesa" title="M-Pesa"></label>
-                <input type="radio" id="paypal" name="payment-method" value="paypal">
-                <label for="paypal" class="payment-method"><img src="https://i.pcmag.com/imagery/reviews/068BjcjwBw0snwHIq0KNo5m-15.fit_lim.size_1050x591.v1602794215.png" alt="PayPal" title="PayPal"></label>
-                <input type="radio" id="visa" name="payment-method" value="visa">
-                <label for="visa" class="payment-method"><img src="https://www.paymentscardsandmobile.com/wp-content/uploads/2021/11/visa-mastercard-logos.jpg" alt="Visa" title="Visa"></label>
+                <!-- <input type="radio" id="paypal" name="payment-method" value="paypal"> -->
+                <!-- <label for="paypal" class="payment-method"><img src="https://i.pcmag.com/imagery/reviews/068BjcjwBw0snwHIq0KNo5m-15.fit_lim.size_1050x591.v1602794215.png" alt="PayPal" title="PayPal"></label> -->
+                <!-- <input type="radio" id="visa" name="payment-method" value="visa"> -->
+                <!-- <label for="visa" class="payment-method"><img src="https://www.paymentscardsandmobile.com/wp-content/uploads/2021/11/visa-mastercard-logos.jpg" alt="Visa" title="Visa"></label> -->
                 
             </div>
         </div>
@@ -595,7 +595,7 @@ if(isset($_POST['cartData'])) {
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Customer 1</h5>
-                        <p class="card-text">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."</p>
+                        <p class="card-text">"The products were very nice ,I really loved them"</p>
                         <div class="rating">
                             &#9733;&#9733;&#9733;&#9733;&#9733; <!-- Five filled stars -->
                         </div>
@@ -608,7 +608,7 @@ if(isset($_POST['cartData'])) {
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Customer 2</h5>
-                        <p class="card-text">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."</p>
+                        <p class="card-text">"Nice service.The grocery were very fresh"</p>
                         <div class="rating">
                             &#9733;&#9733;&#9733;&#9733;&#9733; <!-- Five filled stars -->
                         </div>
@@ -621,7 +621,7 @@ if(isset($_POST['cartData'])) {
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Customer 3</h5>
-                        <p class="card-text">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."</p>
+                        <p class="card-text">"I loved the products alot."</p>
                         <div class="rating">
                             &#9733;&#9733;&#9733;&#9733;&#9733; <!-- Five filled stars -->
                         </div>
@@ -710,8 +710,8 @@ if(isset($_POST['cartData'])) {
             const cartModal = document.getElementById('cart-modal');
             const cartItems = document.getElementById('cart-items');
             const totalAmountDisplay = document.getElementById('total-amount');
-            const removeButtons = document.querySelectorAll('.remove');
-           const additionButtons = document.querySelectorAll('.addition');
+           // const removeButtons = document.querySelectorAll('.remove');
+          // const additionButtons = document.querySelectorAll('.addition');
 //added the above two constant
             const checkoutBtn = document.getElementById('checkout-btn');
 
@@ -799,73 +799,73 @@ if(isset($_POST['cartData'])) {
             });
             //added the below script code for addition and remove
             // Add event listeners for remove buttons
-removeButtons.forEach(button => {
-    button.addEventListener('click', function () {
-        const index = parseInt(this.dataset.index);
-        const productName = this.dataset.productName;
-        const productPrice = parseFloat(this.dataset.productPrice);
-        const quantity = cartItemList[index].quantity;
+// removeButtons.forEach(button => {
+//     button.addEventListener('click', function () {
+//         const index = parseInt(this.dataset.index);
+//         const productName = this.dataset.productName;
+//         const productPrice = parseFloat(this.dataset.productPrice);
+//         const quantity = cartItemList[index].quantity;
 
-        if (quantity > 0) {
-            // Update UI
-            labels[index].textContent = quantity - 1;
+//         if (quantity > 0) {
+//             // Update UI
+//             labels[index].textContent = quantity - 1;
 
-            // Update total quantity of items in cart span
-            totalItemsInCart -= 1;
-            itemsInCart.textContent = totalItemsInCart;
+//             // Update total quantity of items in cart span
+//             totalItemsInCart -= 1;
+//             itemsInCart.textContent = totalItemsInCart;
 
-            // Update TotalAmount
-            TotalAmount -= productPrice;
+//             // Update TotalAmount
+//             TotalAmount -= productPrice;
 
-            // Update cartItemList
-            cartItemList[index].quantity -= 1;
-            cartItemList[index].totalPrice -= productPrice;
+//             // Update cartItemList
+//             cartItemList[index].quantity -= 1;
+//             cartItemList[index].totalPrice -= productPrice;
 
-            // If quantity becomes zero, remove the item from the cartItemList
-            if (cartItemList[index].quantity === 0) {
-                cartItemList.splice(index, 1);
-            }
+//             // If quantity becomes zero, remove the item from the cartItemList
+//             if (cartItemList[index].quantity === 0) {
+//                 cartItemList.splice(index, 1);
+//             }
 
-            // Update localStorage
-            localStorage.setItem("cartItems", JSON.stringify(cartItemList));
-            localStorage.setItem("totalamount", TotalAmount);
+//             // Update localStorage
+//             localStorage.setItem("cartItems", JSON.stringify(cartItemList));
+//             localStorage.setItem("totalamount", TotalAmount);
 
-            // Update cart items display
-            displayCartItems();
-        }
-    });
-});
+//             // Update cart items display
+//             displayCartItems();
+//         }
+//     });
+// });
 
-// Add event listeners for addition buttons
-additionButtons.forEach(button => {
-    button.addEventListener('click', function () {
-        const index = parseInt(this.dataset.index);
-        const productName = this.dataset.productName;
-        const productPrice = parseFloat(this.dataset.productPrice);
-        const quantity = cartItemList[index].quantity;
+// // Add event listeners for addition buttons
+// additionButtons.forEach(button => {
+//     button.addEventListener('click', function () {
+//         const index = parseInt(this.dataset.index);
+//         const productName = this.dataset.productName;
+//         const productPrice = parseFloat(this.dataset.productPrice);
+//         const quantity = cartItemList[index].quantity;
 
-        // Update UI
-        labels[index].textContent = quantity + 1;
+//         // Update UI
+//         labels[index].textContent = quantity + 1;
 
-        // Update total quantity of items in cart span
-        totalItemsInCart += 1;
-        itemsInCart.textContent = totalItemsInCart;
+//         // Update total quantity of items in cart span
+//         totalItemsInCart += 1;
+//         itemsInCart.textContent = totalItemsInCart;
 
-        // Update TotalAmount
-        TotalAmount += productPrice;
+//         // Update TotalAmount
+//         TotalAmount += productPrice;
 
-        // Update cartItemList
-        cartItemList[index].quantity += 1;
-        cartItemList[index].totalPrice += productPrice;
+//         // Update cartItemList
+//         cartItemList[index].quantity += 1;
+//         cartItemList[index].totalPrice += productPrice;
 
-        // Update localStorage
-        localStorage.setItem("cartItems", JSON.stringify(cartItemList));
-        localStorage.setItem("totalamount", TotalAmount);
+//         // Update localStorage
+//         localStorage.setItem("cartItems", JSON.stringify(cartItemList));
+//         localStorage.setItem("totalamount", TotalAmount);
 
-        // Update cart items display
-        displayCartItems();
-    });
-});
+//         // Update cart items display
+//         displayCartItems();
+//     });
+// });
 //end of the script code i added
 
             document.getElementById('cart-btn').addEventListener('click', function () {
@@ -890,9 +890,6 @@ additionButtons.forEach(button => {
                             <p>${item.productName}</p>
                             <p>Quantity: ${item.quantity}</p>
                             <p>Total Price: ${item.totalPrice.toFixed(2)}</p>
-                          
-                            <button class="remove" name="remove" data-product-name="${item.productName}" data-product-price="${item.totalPrice}">-</button>
-                            <button class="addition" name="addition" data-product-name="${item.productName}" data-product-price="${item.totalPrice}">+</button>
                         </div>
                     `;
                     cartItems.insertAdjacentHTML('beforeend', itemHTML);
