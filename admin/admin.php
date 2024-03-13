@@ -35,7 +35,7 @@ if(isset($_POST['addproduct'])) {
     $fileError = $file['error'];
 
     // Destination folder
-    $destinationFolder = 'assets/';
+    $destinationFolder = '../assets/';
 
     // Check if file uploaded successfully
     if ($fileError === 0) {
