@@ -501,7 +501,7 @@ if(isset($_POST['cartData'])) {
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<div class='product'>";
                 echo "<h3>" . $row["productname"] . "</h3>";
-                echo "<p>Price: $" . $row["productprice"] . "</p>";
+                echo "<p>Price:Ksh " . $row["productprice"] . "</p>";
                 echo "<p>Quantity: <span id='quantity-" . $row["productcode"] . "' class='itemsavailable'>" . $row["productquantity"] . "</span></p>";
                 echo "<p>Description: " . $row["productdescription"] . "</p>";
                 echo "<img src='" . $row["file"] . "' alt='" . $row["productname"] . "'>";
@@ -922,7 +922,7 @@ $(document).ready(function() {
 
                 // Show success message
                 const successMessage = document.createElement('div');
-                successMessage.textContent = 'Enter you pin to complete the payment!';
+                successMessage.textContent = 'Enter your pin to complete the payment!';
                 successMessage.style.color = 'green';
                 successMessage.style.fontSize = '24px'; 
                 successMessage.style.position = 'fixed';

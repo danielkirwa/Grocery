@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 require_once('connection.php');
 
-$NGROK_URL = 'https://0b12-41-89-10-241.ngrok-free.app';
+$NGROK_URL = 'https://79fb-41-212-117-244.ngrok-free.app';
 
 //INCLUDE THE ACCESS TOKEN FILE
 include 'accesstoken.php';
@@ -25,8 +25,8 @@ $phone = $txtmpesa;//phone number to receive the stk push
 $money = $stktotal;
 $PartyA = $phone;
 $PartyB = '254708374149';
-$AccountReference = 'CompanyXLTD';
-$TransactionDesc = 'Payment of X';
+$AccountReference = 'Tumaini Groceries';
+$TransactionDesc = 'Payment of groceries';
 $Amount = $money;
 $stkpushheader = ['Content-Type:application/json', 'Authorization:Bearer ' . $access_token];
 //INITIATE CURL
