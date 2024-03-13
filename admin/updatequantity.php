@@ -1,5 +1,5 @@
 <?php
-require_once('connection.php');
+require_once('../connection.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve product code and change in quantity from the AJAX request
