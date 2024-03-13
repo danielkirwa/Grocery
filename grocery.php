@@ -526,7 +526,7 @@ if(isset($_POST['cartData'])) {
 </section>
 
 <div id="cart-modal" class="modal">
-<form action="stkkpush.php"> 
+<form action="stkkpush.php" method="POST"> 
 <div class="modal-content">
         <span class="close">&times;</span>
         <h2>My products</h2>
@@ -537,6 +537,7 @@ if(isset($_POST['cartData'])) {
             <!-- <p>Subtotal: <span id="subtotal">$0.00</span></p>
             <p>Discount: <span id="discount">$0.00</span></p> -->
             <p>Total: <span id="total">$0.00</span></p>
+            <input type="hidden" name="stktotal" id="stktotal" value="">
             <p>Date/Time: <span id="timestamp"></span></p>
             <!-- <p>Payment Methods:</p> -->
             <div id="payment-icons">
@@ -548,8 +549,10 @@ if(isset($_POST['cartData'])) {
                 <!-- <label for="visa" class="payment-method"><img src="https://www.paymentscardsandmobile.com/wp-content/uploads/2021/11/visa-mastercard-logos.jpg" alt="Visa" title="Visa"></label> -->
                 
             </div>
+            <label>Confirm the number below or change </label></br>
+            <input type="text" id="txtmpesa" name="txtmpesa" value="" placeholder="254712345678">
         </div>
-        <button id="checkout-btn" class="checkout-button"  style="width: 200px;font-weight: bold;">Checkout</button>
+        <button id="checkout-btn" class="checkout-button"  style="width: 200px;font-weight: bold;" type="submit">Checkout</button>
 
     </div>
                 </form>
@@ -870,6 +873,8 @@ if(isset($_POST['cartData'])) {
 
             document.getElementById('cart-btn').addEventListener('click', function () {
                 cartModal.style.display = 'block';
+                document.getElementById('total').innerHTML =  localStorage.getItem("totalamount", TotalAmount);
+                 document.getElementById('stktotal').value =  localStorage.getItem("totalamount", TotalAmount);
             });
 
             document.querySelector('.close').addEventListener('click', function () {
@@ -880,8 +885,8 @@ if(isset($_POST['cartData'])) {
                 // Implement checkout functionality here
             });
             
-
             function displayCartItems() {
+                
                 cartItems.innerHTML = '';
                 //  added attributes to these buttons addition and remove
                 cartItemList.forEach(item => {
