@@ -1,6 +1,6 @@
 <?php
 require_once('../connection.php');
-// check seesion
+// check session
 session_start();
 
 // Check if the user is logged in
@@ -35,7 +35,7 @@ if(isset($_POST['addproduct'])) {
     $fileError = $file['error'];
 
     // Destination folder
-    $destinationFolder = '../assets/';
+    $destinationFolder = 'assets/';
 
     // Check if file uploaded successfully
     if ($fileError === 0) {

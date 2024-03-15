@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 require_once('connection.php');
 
-$NGROK_URL = 'https://79fb-41-212-117-244.ngrok-free.app';
+$NGROK_URL = 'https://6ab1-41-89-10-241.ngrok-free.app';
 
 //INCLUDE THE ACCESS TOKEN FILE
 include 'accesstoken.php';

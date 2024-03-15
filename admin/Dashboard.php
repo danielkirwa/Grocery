@@ -134,6 +134,7 @@ mysqli_close($con);
             <a href="dashboard.php">Dashboard</a>
             <a href="admin.php">Add Products</a>
             <a href="products.php">View Products</a>
+             <a href="salesreport.php">Sales Report</a>
             <a href="user.php">System Users</a>
             <a href="customer.php">Customer Feedback</a>
             <a href="../logout.php">Log out</a>

@@ -140,7 +140,7 @@ if($_SESSION['priviledge'] !== 'admin') {
                 echo "<p>Price: Ksh" . $row["productprice"] . "</p>";
                 echo "<p>Quantity: <span id='quantity-" . $row["productcode"] . "'>" . $row["productquantity"] . "</span></p>";
                 echo "<p>Description: " . $row["productdescription"] . "</p>";
-                echo "<img src='" . $row["file"] . "' alt='" . $row["productname"] . "'>";
+                echo "<img src='../" . $row["file"] . "' alt='" . $row["productname"] . "'>";
                 echo "<div class='button-container'>";
                 echo "<button onclick='changeQuantity(" . $row["productcode"] . ", 1)'>+</button>";
                 echo "<button onclick='changeQuantity(" . $row["productcode"] . ", -1)'>-</button>";
