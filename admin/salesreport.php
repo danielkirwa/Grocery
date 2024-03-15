@@ -41,6 +41,38 @@ if (mysqli_num_rows($result) > 0) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Sales Report</title>
         <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                max-width: 1000px;
+                margin: 20px auto;
+                padding: 20px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                background-color: #fff;
+            }
+            h1 {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            form {
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            form input[type="text"] {
+                padding: 8px;
+                margin-right: 10px;
+                width: 150px;
+            }
+            form button {
+                padding: 8px 20px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+            }
             table {
                 width: 100%;
                 border-collapse: collapse;
@@ -53,50 +85,69 @@ if (mysqli_num_rows($result) > 0) {
             th {
                 background-color: #f2f2f2;
             }
+            .print-button {
+                text-align: right;
+                margin-bottom: 20px;
+            }
+            .print-button button {
+                padding: 8px 20px;
+                background-color: #28a745;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
-        <h1>Sales Report</h1>
+        <div class="container">
+            <h1>Sales Report</h1>
 
-        <!-- Search buttons -->
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <label for="month">Search by Month:</label>
-            <input type="text" id="month" name="month" value="<?php echo htmlspecialchars($searchMonth); ?>" placeholder="Enter month...">
-            <button type="submit" name="searchByMonth">Search</button><br><br>
-            <label for="customerId">Search by Customer ID:</label>
-            <input type="text" id="customerId" name="customerId" value="<?php echo htmlspecialchars($searchCustomerId); ?>" placeholder="Enter customer ID...">
-            <button type="submit" name="searchByCustomerId">Search</button>
-        </form>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Month</th>
-                    <th>Year</th>
-                    <th>Item Sold</th>
-                    <th>Customer ID</th>
-                    <th>Total Amount</th>
-                    <th>Payment Type</th>
-                    <th>Payment ID</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                // Loop through each row in the result set and display it in the table
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($row['MonthOfSale']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['YearOfSale']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['ItemSold']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['CustomerId']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['TotalAmount']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['PaymentType']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['PaymentId']) . "</td>";
-                    echo "</tr>";
-                }
-                ?>
-            </tbody>
-        </table>
+            <!-- Print button -->
+            <div class="print-button">
+                <button onclick="window.print()">Print Report</button>
+            </div>
+
+            <!-- Search form -->
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                <label for="month">Search by Month:</label>
+                <input type="text" id="month" name="month" value="<?php echo htmlspecialchars($searchMonth); ?>" placeholder="Enter month...">
+                <button type="submit" name="searchByMonth">Search</button><br><br>
+                <label for="customerId">Search by Customer ID:</label>
+                <input type="text" id="customerId" name="customerId" value="<?php echo htmlspecialchars($searchCustomerId); ?>" placeholder="Enter customer ID...">
+                <button type="submit" name="searchByCustomerId">Search</button>
+            </form>
+            
+            <!-- Sales table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th>Item Sold</th>
+                        <th>Customer ID</th>
+                        <th>Total Amount</th>
+                        <th>Payment Type</th>
+                        <th>Payment ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // Loop through each row in the result set and display it in the table
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($row['MonthOfSale']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['YearOfSale']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['ItemSold']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['CustomerId']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['TotalAmount']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['PaymentType']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['PaymentId']) . "</td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </body>
     </html>
     <?php
