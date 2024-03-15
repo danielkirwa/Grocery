@@ -104,7 +104,7 @@ if (mysqli_num_rows($result) > 0) {
 
             <!-- Print button -->
             <div class="print-button">
-                <button onclick="window.print()">Print Report</button>
+                <button onclick="printTable()">Print Report</button>
             </div>
 
             <!-- Search form -->
@@ -118,7 +118,7 @@ if (mysqli_num_rows($result) > 0) {
             </form>
             
             <!-- Sales table -->
-            <table>
+            <table id="salesTable">
                 <thead>
                     <tr>
                         <th>Month</th>
@@ -148,6 +148,16 @@ if (mysqli_num_rows($result) > 0) {
                 </tbody>
             </table>
         </div>
+        
+        <script>
+            function printTable() {
+                var printContents = document.getElementById('salesTable').outerHTML;
+                var originalContents = document.body.innerHTML;
+                document.body.innerHTML = printContents;
+                window.print();
+                document.body.innerHTML = originalContents;
+            }
+        </script>
     </body>
     </html>
     <?php
