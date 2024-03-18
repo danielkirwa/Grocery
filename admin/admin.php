@@ -139,7 +139,6 @@ if(isset($_POST['removeproduct'])) {
             <a href="admin.php">Add Products</a>
             <a href="products.php">View Products</a>
             <a href="user.php">System Users</a>
-            <a href="customer.php">Customer Feedback</a>
         </div>
     </div>
 

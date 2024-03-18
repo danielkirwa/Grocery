@@ -1,6 +1,5 @@
-<!-- salesreport.php -->
-
 <?php
+
 require_once('../connection.php');
 
 // Check session and user privileges (if necessary)
@@ -85,11 +84,11 @@ if (mysqli_num_rows($result) > 0) {
             th {
                 background-color: #f2f2f2;
             }
-            .print-button {
+            .download-button {
                 text-align: right;
                 margin-bottom: 20px;
             }
-            .print-button button {
+            .download-button button {
                 padding: 8px 20px;
                 background-color: #28a745;
                 color: #fff;
@@ -102,9 +101,9 @@ if (mysqli_num_rows($result) > 0) {
         <div class="container">
             <h1>Sales Report</h1>
 
-            <!-- Print button -->
-            <div class="print-button">
-                <button onclick="printTable()">Print Report</button>
+            <!-- Download button -->
+            <div class="download-button">
+                <button onclick="downloadTable()">Download Report</button>
             </div>
 
             <!-- Search form -->
@@ -150,14 +149,40 @@ if (mysqli_num_rows($result) > 0) {
         </div>
         
         <script>
-            function printTable() {
-                var printContents = document.getElementById('salesTable').outerHTML;
-                var originalContents = document.body.innerHTML;
-                document.body.innerHTML = printContents;
-                window.print();
-                document.body.innerHTML = originalContents;
-            }
-        </script>
+    function downloadTable() {
+        var tableContent = document.getElementById('salesTable').outerHTML;
+        var styles = `
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                table, th, td {
+                    border: 1px solid #ccc;
+                    padding: 8px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f2f2f2;
+                }
+            </style>
+        `;
+        var fullHtml = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Sales Report</title>' + styles + '</head><body>' + tableContent + '</body></html>';
+        var blob = new Blob([fullHtml], { type: 'text/html' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'sales_report.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+</script>
     </body>
     </html>
     <?php
