@@ -100,6 +100,13 @@ if (mysqli_num_rows($result) > 0) {
     <body>
         <div class="container">
             <h1>Sales Report</h1>
+               <!-- Download button -->
+               <div class="back">
+    <a href="reports.php">
+        <button style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; outline: none;">Back</button>
+    </a>
+</div>
+
 
             <!-- Download button -->
             <div class="download-button">

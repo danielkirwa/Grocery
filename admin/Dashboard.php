@@ -85,7 +85,13 @@ if (mysqli_num_rows($result) > 0) {
 mysqli_close($con);
 ?>
 
-
+<?php
+    // Calculate total sales by summing up all values in the $totalAmounts array
+    $totalSales = 0;
+    foreach ($totalAmounts as $amount) {
+        $totalSales += $amount;
+    }
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -155,20 +161,21 @@ mysqli_close($con);
     <div class="container">
         <!-- Sales Card -->
         <div class="card" onclick="window.location.href='salesreport.php';">
-            <h2>Sales Report</h2>
+            <h2>Total number of sales</h2>
+            <p>Total sales: <?php echo $totalSales; ?></p>
             <canvas id="salesChart" width="400" height="200"></canvas>
         </div>
 
         <!-- Users Card -->
         <div class="card" onclick="window.location.href='userreport.php';">
-            <h2>Users Report</h2>
+            <h2>total number of users</h2>
             <p>Total users: <?php echo $totalUsers; ?></p>
             <canvas id="usersChart"></canvas>
         </div>
         
         <!-- Products Card -->
-        <div class="card" onclick="window.location.href='productsreport.php';">
-            <h2>Products Report</h2>
+        <div class="card" onclick="window.location.href='productsavailable.php';">
+            <h2>Total products</h2>
             <canvas id="productQuantityChart"></canvas>
             <p>Total products: <?php echo array_sum($productQuantities); ?></p>
         </div>

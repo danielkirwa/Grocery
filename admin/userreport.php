@@ -90,6 +90,7 @@ $result = mysqli_query($con, $sqlSelectUsers);
         table {
             width: 100%;
             border-collapse: collapse;
+            border: 1px solid #ddd;
             margin-top: 20px;
         }
         
@@ -107,11 +108,33 @@ $result = mysqli_query($con, $sqlSelectUsers);
         tr:hover {
             background-color: #f9f9f9;
         }
+        #download {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            outline: none;
+            display: block;
+            margin: 20px auto;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #download:hover {
+            background-color: #45a049;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.0/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <h2>User Reports</h2>
+    <div class="back">
+    <a href="reports.php">
+        <button style="padding: 10px 20px; margin-bottom:10px;background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; outline: none;">Back</button>
+    </a>
+</div>
 
     <!-- Search form -->
     <form method="GET">
@@ -120,10 +143,11 @@ $result = mysqli_query($con, $sqlSelectUsers);
     </form>
 
     <!-- Download PDF button -->
-    <button onclick="generatePDF()">Download PDF</button>
+    <button id="download"; onclick="generateTablePDF()">Download PDF</button>
 
     <!-- User data table -->
-    <table>
+    <table id="userTable">
+    <th style="text-align: center;">USERS</th>
         <tr>
             <th>Name</th>
             <th>Email</th>
@@ -145,9 +169,10 @@ $result = mysqli_query($con, $sqlSelectUsers);
         ?>
     </table>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.0/html2pdf.bundle.min.js"></script>
     <script>
-        function generatePDF() {
-            const content = document.body;
+        function generateTablePDF() {
+            const content = document.getElementById('userTable');
             const options = {
                 filename: 'user_report.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
@@ -158,5 +183,6 @@ $result = mysqli_query($con, $sqlSelectUsers);
             html2pdf().from(content).set(options).save();
         }
     </script>
+</body>
 </body>
 </html>

@@ -65,6 +65,7 @@
             <option value="salesreport.php">Sales Report</option>
             <option value="customer.php">Customer feedback Report</option>
             <option value="userreport.php">User Report</option>
+            <option value="productsavailable.php">productsavailable</option>
             <!-- Add more report options here -->
             <!-- Example: <option value="another_report.php">Another Report</option> -->
         </select>

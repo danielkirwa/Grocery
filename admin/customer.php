@@ -206,6 +206,11 @@ body {
 <!-- added the onlick event -->
 <div>     
      <button class="print-button" onclick="generatePDF()">Print enquiries</button>
+     <div class="back">
+    <a href="reports.php">
+        <button style="padding: 10px 20px;background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; outline: none;">Back</button>
+    </a>
+</div>
 </div>
 
 <!-- Added this div for the pop-up form to reply-->
