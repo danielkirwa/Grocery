@@ -54,6 +54,19 @@ $labelsJSON = json_encode($labels);
 $dataJSON = json_encode($data);
 ?>
 <?php
+$sql = "SELECT MonthOfSale, SUM(TotalAmount) AS TotalAmount FROM sales GROUP BY MonthOfSale";
+$result = mysqli_query($con, $sql);
+
+// Step 2: Process the fetched data
+$months = [];
+$totalAmounts = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $months[] = $row['MonthOfSale'];
+    $totalAmounts[] = $row['TotalAmount'];
+}
+
+?>
+<?php
 require_once('../connection.php');
 
 $productNames = [];
@@ -72,7 +85,13 @@ if (mysqli_num_rows($result) > 0) {
 mysqli_close($con);
 ?>
 
-
+<?php
+    // Calculate total sales by summing up all values in the $totalAmounts array
+    $totalSales = 0;
+    foreach ($totalAmounts as $amount) {
+        $totalSales += $amount;
+    }
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -124,7 +143,6 @@ mysqli_close($con);
             width: 600px;
             margin-top: 20px;
         }
-        
     </style>
 </head>
 <body>
@@ -134,8 +152,8 @@ mysqli_close($con);
             <a href="dashboard.php">Dashboard</a>
             <a href="admin.php">Add Products</a>
             <a href="products.php">View Products</a>
+            <a href="Reports.php">My reports</a>
             <a href="user.php">System Users</a>
-            <a href="customer.php">Customer Feedback</a>
             <a href="../logout.php">Log out</a>
         </div>
     </div>
@@ -143,129 +161,70 @@ mysqli_close($con);
     <div class="container">
         <!-- Sales Card -->
         <div class="card" onclick="window.location.href='salesreport.php';">
-            <h2>Sales Report</h2>
-            <p>Total sales: $5000</p>
-            <canvas id="salesChart"></canvas>
+            <h2>Total number of sales</h2>
+            <p>Total sales: <?php echo $totalSales; ?></p>
+            <canvas id="salesChart" width="400" height="200"></canvas>
         </div>
 
-        <!-- Product Sales Card -->
-        <div class="card" onclick="window.location.href='productsalesreport.php';">
-            <h2>Product Sales Report</h2>
-            <p>Total products sold: 200</p>
-            <canvas id="productSalesChart"></canvas>
+        <!-- Users Card -->
+        <div class="card" onclick="window.location.href='userreport.php';">
+            <h2>total number of users</h2>
+            <p>Total users: <?php echo $totalUsers; ?></p>
+            <canvas id="usersChart"></canvas>
         </div>
         
-
-  <!-- Users Card -->
-<div class="card" onclick="window.location.href='user.php';">
-    <h2>Users Report</h2>
-    <p>Total users: <?php echo $totalUsers; ?></p>
-    <canvas id="usersChart"></canvas>
-</div>
         <!-- Products Card -->
-        <div class="card" onclick="window.location.href='productsreport.php';">
-    <h2>Products Report</h2>
-    <canvas id="productQuantityChart"></canvas>
-    <p>Total products: <?php echo array_sum($productQuantities); ?></p>
-</div>
-
-        <!-- Orders Card -->
-        <div class="card" onclick="window.location.href='ordersreport.php';">
-            <h2>Orders Report</h2>
-            <p>Total orders: 50</p>
-            <canvas id="ordersChart"></canvas>
+        <div class="card" onclick="window.location.href='productsavailable.php';">
+            <h2>Total products</h2>
+            <canvas id="productQuantityChart"></canvas>
+            <p>Total products: <?php echo array_sum($productQuantities); ?></p>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Product data fetched from PHP
-    const productNames = <?php echo json_encode($productNames); ?>;
-    const productQuantities = <?php echo json_encode($productQuantities); ?>;
-    
-    // Generate random colors for each product
-    const generateRandomColor = () => {
-        return '#' + Math.floor(Math.random()*16777215).toString(16);
-    };
-    const backgroundColors = productNames.map(() => generateRandomColor());
 
-    // Render bar chart
-    const productQuantityChartCanvas = document.getElementById('productQuantityChart').getContext('2d');
-    const productQuantityChart = new Chart(productQuantityChartCanvas, {
-        type: 'bar',
-        data: {
-            labels: productNames,
-            datasets: [{
-                label: 'Product Quantity',
-                data: productQuantities,
-                backgroundColor: backgroundColors,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-</script>
     <script>
-        // Sample sales data
-        const salesData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        var salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: <?php echo json_encode($months); ?>,
+                datasets: [{
+                    label: 'Total Amount',
+                    data: <?php echo json_encode($totalAmounts); ?>,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
+    <script>
+        // Sample users data (replace with actual data fetched from PHP)
+        const usersData = {
+            labels: <?php echo $labelsJSON; ?>,
             datasets: [{
-                label: 'Sales',
-                data: [65, 59, 80, 81, 56, 55],
+                label: 'Users',
+                data: <?php echo $dataJSON; ?>,
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1
             }]
         };
 
-        // Sample product sales data
-        const productSalesData = {
-            labels: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'],
-            datasets: [{
-                label: 'Product Sales',
-                data: [12, 19, 3, 5, 2],
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        };
-
-        // Sample users data (replace with actual data fetched from PHP)
-const usersData = {
-    labels: <?php echo $labelsJSON; ?>,
-    datasets: [{
-        label: 'Users',
-        data: <?php echo $dataJSON; ?>,
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
-    }]
-};
-
-        // Sample orders data
-        const ordersData = {
-            labels: ['Pending', 'Processing', 'Delivered'],
-            datasets: [{
-                label: 'Orders',
-                data: [10, 20, 20],
-                backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(75, 192, 192, 0.2)'],
-                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(75, 192, 192, 1)'],
-                borderWidth: 1
-            }]
-        };
-
-        // Render sales chart
-        const salesChartCanvas = document.getElementById('salesChart').getContext('2d');
-        const salesChart = new Chart(salesChartCanvas, {
+        // Render users chart as a bar chart
+        const usersChartCanvas = document.getElementById('usersChart').getContext('2d');
+        const usersChart = new Chart(usersChartCanvas, {
             type: 'bar',
-            data: salesData,
+            data: usersData,
             options: {
                 scales: {
                     y: {
@@ -273,45 +232,44 @@ const usersData = {
                     }
                 }
             }
-        });
-
-        // Render product sales chart
-        const productSalesChartCanvas = document.getElementById('productSalesChart').getContext('2d');
-        const productSalesChart = new Chart(productSalesChartCanvas, {
-            type: 'bar',
-            data: productSalesData,
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-    // Render users chart as a bar chart
-const usersChartCanvas = document.getElementById('usersChart').getContext('2d');
-const usersChart = new Chart(usersChartCanvas, {
-    type: 'bar',
-    data: usersData,
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-});
-
-
-        // Render orders chart
-        const ordersChartCanvas = document.getElementById('ordersChart').getContext('2d');
-        const ordersChart = new Chart(ordersChartCanvas, {
-            type: 'pie',
-            data: ordersData,
-            options: {}
         });
     </script>
-    
+
+    <script>
+        // Product data fetched from PHP
+        const productNames = <?php echo json_encode($productNames); ?>;
+        const productQuantities = <?php echo json_encode($productQuantities); ?>;
+        
+        // Generate random colors for each product
+        const generateRandomColor = () => {
+            return '#' + Math.floor(Math.random()*16777215).toString(16);
+        };
+        const backgroundColors = productNames.map(() => generateRandomColor());
+
+        // Render bar chart
+        const productQuantityChartCanvas = document.getElementById('productQuantityChart').getContext('2d');
+        const productQuantityChart = new Chart(productQuantityChartCanvas, {
+            type: 'bar',
+            data: {
+                labels: productNames,
+                datasets: [{
+                    label: 'Product Quantity',
+                    data: productQuantities,
+                    backgroundColor: backgroundColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
 </body>
 </html>
+

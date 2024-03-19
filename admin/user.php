@@ -155,6 +155,7 @@ $result = mysqli_query($con, $sqlSelectUsers);
 
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -389,7 +390,6 @@ $result = mysqli_query($con, $sqlSelectUsers);
                 <!-- added an add user button but now working still -->
                 <button type="submit" name="delete">Delete User</button>
                 <button type="submit" name="save">Save Changes</button>
-                <button type="button" onclick="generatePDF() ">Print Report</button>
             </td>
         </tr>
     </table>
@@ -434,14 +434,7 @@ $result = mysqli_query($con, $sqlSelectUsers);
         // Close the modal when close button is clicked
         document.getElementById('addUserModal').style.display = 'none';
     }
-    function generatePDF() {
-    const content = document.getElementById('mytable');
-    const timestamp = new Date().toISOString().replace(/:/g, '-');
-    const filename = `Tumaini_grocery_${timestamp}.pdf`;
-    html2pdf()
-        .from(content)
-        .save(filename);
-}
+ 
 </script>
 </html>
 

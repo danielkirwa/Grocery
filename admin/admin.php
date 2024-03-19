@@ -1,6 +1,6 @@
 <?php
 require_once('../connection.php');
-// check seesion
+// check session
 session_start();
 
 // Check if the user is logged in
@@ -35,7 +35,7 @@ if(isset($_POST['addproduct'])) {
     $fileError = $file['error'];
 
     // Destination folder
-    $destinationFolder = '../assets/';
+    $destinationFolder = 'assets/';
 
     // Check if file uploaded successfully
     if ($fileError === 0) {
@@ -139,7 +139,6 @@ if(isset($_POST['removeproduct'])) {
             <a href="admin.php">Add Products</a>
             <a href="products.php">View Products</a>
             <a href="user.php">System Users</a>
-            <a href="customer.php">Customer Feedback</a>
         </div>
     </div>
 

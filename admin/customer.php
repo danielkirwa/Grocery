@@ -166,7 +166,6 @@ body {
             <a href="admin.php">Add Products</a>
             <a href="products.php">View Products</a>
             <a href="user.php">System Users</a>
-            <a href="customer.php">Customer Feedback</a>
         </div>
         <!-- wrapped the code in div print page -->
     </div>
@@ -211,6 +210,11 @@ body {
 </div>
 <div>     
      <button class="print-button" onclick="generatePDF()">Print enquiries</button>
+     <div class="back">
+    <a href="reports.php">
+        <button style="padding: 10px 20px;background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; outline: none;">Back</button>
+    </a>
+</div>
 </div>
 
 <!-- Added this div for the pop-up form to reply-->
