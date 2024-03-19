@@ -545,9 +545,10 @@ if(isset($_POST['cartData'])) {
               
             </div>
             <label>Input your phone number</label></br>
-            <input type="text" id="txtmpesa" name="txtmpesa" value="" placeholder="254712345678">
+            <input type="number" id="txtmpesa" name="txtmpesa" value="" placeholder="254712345678" onkeyup="validateNumber(this)">
+
         </div>
-        <button id="checkout-btn" class="checkout-button"  style="width: 200px;font-weight: bold;" type="submit">Checkout</button>
+        <button id="checkout-btn" class="checkout-button"  style="width: 200px;font-weight: bold;" type="submit">pay</button>
 
     </div>
                 </form>
@@ -678,9 +679,19 @@ if(isset($_POST['cartData'])) {
 
    
 </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
     <script src="js/grocery.js"></script>
+    <script>function validateNumber(input) {
+  // Allow optional +254 prefix for international users
+  const regex = /^(?:\+254)?\d{10}$/; 
+  if (!regex.test(input.value)) {
+    input.style.backgroundColor = "red"; // Error indication with red background
+  } else {
+    input.style.backgroundColor = "white"; // Success indication with white background
+  }
+}</script>
     <script>
  // for profile view pop up 
  document.addEventListener('DOMContentLoaded', function() {
@@ -888,7 +899,7 @@ $(document).ready(function() {
 
         // Additional data
         var customerId = "test@gmail.com";
-        var totalAmount = 222;
+        var totalAmount= localStorage.getItem('totalamount');
         var paymentType = "Mpesa";
         var paymentId = "WDVK23VJF83";
 
