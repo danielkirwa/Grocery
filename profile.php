@@ -102,7 +102,25 @@ if(isset($_SESSION['user_email'])) {
                             echo "<tr>";
                             echo "<td>" . date("F", strtotime(($row["MonthOfSale"]) . "/1/" . $row["YearOfSale"])) . "</td>"; // Convert month number to month name
                             echo "<td>" . $row["YearOfSale"] . "</td>";
-                            echo "<td>" . $row["ItemSold"] . "</td>";
+                            echo "<td>";
+    
+    // Check if $row["ItemSold"] is not null and is a valid JSON string
+    if ($row["ItemSold"] !== null && ($items_sold = json_decode($row["ItemSold"], true)) !== null) {
+        echo "<table border='1'>";
+        echo "<tr><th>Product Name</th><th>Quantity</th><th>Total Price</th></tr>";
+        foreach ($items_sold as $item) {
+            echo "<tr>";
+            echo "<td>" . $item['productName'] . "</td>";
+            echo "<td>" . $item['quantity'] . "</td>";
+            echo "<td>$" . $item['totalPrice'] . "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    } else {
+        echo "Invalid data";
+    }
+    
+    echo "</td>";
                             echo "<td>" . $row["TotalAmount"] . "</td>";
                             echo "<td>" . $row["PaymentType"] . "</td>";
                             echo "<td>" . $row["PaymentId"] . "</td>";
